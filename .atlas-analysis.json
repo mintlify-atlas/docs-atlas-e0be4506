@@ -1,0 +1,86 @@
+{
+  "projectType": "frontend",
+  "projectName": "SUGO Front",
+  "projectDescription": "React-based frontend application for managing dispatch and reception workflows",
+  "theme": "mint",
+  "primaryColor": "#f1d262",
+  "lightColor": "#7c6c34",
+  "darkColor": "#19160b",
+  "navigation": {
+    "tabs": [
+      {
+        "tab": "Documentation",
+        "groups": [
+          {
+            "group": "Getting Started",
+            "pages": [
+              "introduction",
+              "quickstart",
+              "installation"
+            ]
+          },
+          {
+            "group": "Architecture",
+            "pages": [
+              "architecture/overview",
+              "architecture/project-structure",
+              "architecture/routing"
+            ]
+          },
+          {
+            "group": "Components",
+            "pages": [
+              "components/overview",
+              "components/header",
+              "components/sugo-main",
+              "components/formulario-despacho",
+              "components/formulario-recepcion"
+            ]
+          },
+          {
+            "group": "Hooks",
+            "pages": [
+              "hooks/overview",
+              "hooks/use-modulos",
+              "hooks/use-hook-general"
+            ]
+          },
+          {
+            "group": "Styling",
+            "pages": [
+              "styling/theme",
+              "styling/primereact",
+              "styling/bootstrap"
+            ]
+          },
+          {
+            "group": "Development",
+            "pages": [
+              "development/setup",
+              "development/building",
+              "development/docker"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "keyFeatures": [
+    "Dispatch form management",
+    "Reception form management",
+    "PrimeReact component integration",
+    "React Router navigation",
+    "Custom hooks for module selection",
+    "Bootstrap styling",
+    "Docker containerization"
+  ],
+  "publicApiSurface": [
+    "App component",
+    "Header component",
+    "Sugo_main component",
+    "FormularioDespacho component",
+    "FormularioRecepcion component",
+    "useModulos hook",
+    "useHook_General hook"
+  ]
+}
