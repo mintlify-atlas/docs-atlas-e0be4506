@@ -1,0 +1,214 @@
+---
+title: 'Theming & Styling Architecture'
+description: 'Overview of SUGO Front styling approach, CSS organization, and theme customization'
+---
+
+## Styling Architecture Overview
+
+SUGO Front uses a multi-layered styling approach that combines:
+
+- **PrimeReact** theme system for component styling
+- **Bootstrap** utilities for layout and spacing
+- **Custom CSS** for application-specific styles
+- **Inline styles** for dynamic component customization
+
+## Import Structure
+
+All styling dependencies are imported in a specific order in `main.tsx` to ensure proper CSS cascading:
+
+```tsx src/main.tsx
+import "bootstrap/dist/css/bootstrap.min.css";
+import "bootstrap-icons/font/bootstrap-icons.css";
+import "primereact/resources/themes/saga-blue/theme.css";
+import "primereact/resources/primereact.min.css";
+import "primeicons/primeicons.css";
+import "./App.css";
+```
+
+<Note>
+The import order matters! Bootstrap is loaded first, followed by PrimeReact themes, and finally custom CSS to allow overrides.
+</Note>
+
+## CSS Organization
+
+### Custom CSS (App.css)
+
+The application uses a centralized `App.css` file organized by component sections:
+
+<Tabs>
+  <Tab title="Header Styles">
+    ```css src/App.css
+    /* header */
+    .menuBar {
+      margin: 0.8rem;
+      box-shadow: 0.5rem 0.5rem 1rem rgba(129, 128, 128, 0.2);
+    }
+
+    .menuBar a {
+      text-decoration: none !important;
+    }
+
+    .menuBar .p-menuitem-link {
+      margin-right: 1rem;
+      margin-left: -1rem;
+    }
+
+    /* Center menu items */
+    .menuBar .p-menubar-root-list {
+      justify-content: center !important;
+      margin-top: 0.4rem;
+    }
+    ```
+  </Tab>
+  
+  <Tab title="Card Styles">
+    ```css src/App.css
+    /* card-formulario */
+    .card-formulario {
+      width: 800px;
+      max-height: 500px;
+      text-align: center;
+      background-color: rgba(170, 173, 168, 0.466);
+      border-radius: 1rem;
+    }
+
+    .card {
+      background-color: rgba(245, 245, 245, 0.466);
+      width: 800px;
+      min-height: 200px;
+      text-align: center;
+    }
+    ```
+  </Tab>
+  
+  <Tab title="Component Overrides">
+    ```css src/App.css
+    /* TabView customization */
+    .p-tabview-nav .p-tabview-nav-link {
+      text-decoration: none !important;
+    }
+
+    /* Button customization */
+    Button {
+      border-radius: 0.7rem !important;
+    }
+
+    /* Form controls */
+    .select {
+      width: 180px;
+      height: 35px;
+      font-size: 1rem;
+      border-radius: 8px;
+    }
+    ```
+  </Tab>
+</Tabs>
+
+## Inline Styles Usage
+
+For dynamic or component-specific styling, inline styles are used:
+
+```tsx src/components/Header.tsx
+<div style={{ display: "flex", alignItems: "center", gap: "1.5rem" }}>
+  <i className="pi pi-user" style={{ fontSize: "1.1rem" }}></i>
+  
+  <button
+    style={{
+      background: "none",
+      border: "none",
+      cursor: "pointer",
+      padding: 0,
+      marginRight: "0.5rem",
+    }}
+  >
+    <i className="pi pi-sign-out" style={{ fontSize: "1.2rem", color: "#4caf50" }}></i>
+  </button>
+</div>
+```
+
+## Theme Customization
+
+### Brand Colors
+
+SUGO Front uses a custom color palette:
+
+<CardGroup cols={3}>
+  <Card title="Primary" icon="palette">
+    **#f1d262**
+    
+    Gold/Yellow - Primary brand color
+  </Card>
+  
+  <Card title="Secondary" icon="palette">
+    **#7c6c34**
+    
+    Olive - Secondary accent color
+  </Card>
+  
+  <Card title="Dark" icon="palette">
+    **#19160b**
+    
+    Dark Brown - Text and contrasts
+  </Card>
+</CardGroup>
+
+### Typography
+
+Custom typography settings:
+
+```css src/App.css
+h1 {
+  font-size: 1.2rem;
+}
+
+.titulo {
+  color: #928f8f;
+  height: 3rem;
+  padding-top: 0.5rem;
+  margin-right: 1.7rem;
+  margin-left: 1.7rem;
+}
+
+.texto_sugo {
+  color: rgba(121, 121, 119, 0.144) !important;
+  font-size: 6rem !important;
+  font-family: Arial, Helvetica, sans-serif;
+  font-weight: bold;
+}
+```
+
+## Styling Best Practices
+
+<Steps>
+  <Step title="Use PrimeReact components first">
+    Leverage built-in PrimeReact components and their styling system before creating custom solutions.
+  </Step>
+  
+  <Step title="Apply Bootstrap utilities for layout">
+    Use Bootstrap's flexbox utilities (`d-flex`, `justify-content-center`, etc.) for responsive layouts.
+  </Step>
+  
+  <Step title="Override in App.css">
+    Place component overrides and custom styles in `App.css` with specific class names.
+  </Step>
+  
+  <Step title="Use inline styles sparingly">
+    Reserve inline styles for dynamic values or one-off component-specific adjustments.
+  </Step>
+</Steps>
+
+<Warning>
+When overriding PrimeReact styles, you may need to use `!important` to ensure your custom styles take precedence.
+</Warning>
+
+## Next Steps
+
+<CardGroup cols={2}>
+  <Card title="PrimeReact Styling" icon="react" href="/styling/primereact">
+    Learn about PrimeReact component customization and theming
+  </Card>
+  
+  <Card title="Bootstrap Integration" icon="bootstrap" href="/styling/bootstrap">
+    Explore Bootstrap utilities and grid system usage
+  </Card>
+</CardGroup>

@@ -1,0 +1,398 @@
+---
+title: Installation
+description: Complete installation guide for SUGO Front with Docker and local development options
+---
+
+## System Requirements
+
+### Minimum Requirements
+
+- **Node.js**: 24.14.0 or higher (Alpine-based recommended)
+- **RAM**: 2GB minimum, 4GB recommended
+- **Disk Space**: 500MB for dependencies and build files
+- **OS**: Linux, macOS, or Windows with WSL2
+
+### Required Software
+
+- **Package Manager**: npm (comes with Node.js), yarn, or pnpm
+- **Git**: For version control
+- **Docker** (optional): 20.10+ for containerized deployment
+- **Docker Compose** (optional): 2.0+ for multi-container setups
+
+## Local Installation
+
+<Steps>
+  <Step title="Verify Node.js installation">
+    Check that Node.js is installed and meets the version requirement:
+    
+    ```bash
+    node --version
+    # Should output v24.14.0 or higher
+    
+    npm --version
+    # Should output 10.0.0 or higher
+    ```
+    
+    If Node.js is not installed, download it from [nodejs.org](https://nodejs.org/) or use a version manager like [nvm](https://github.com/nvm-sh/nvm).
+  </Step>
+  
+  <Step title="Clone the repository">
+    Clone SUGO Front to your development environment:
+    
+    ```bash
+    git clone <repository-url>
+    cd sugo-front
+    ```
+  </Step>
+  
+  <Step title="Install dependencies">
+    Run the installation command. The `preinstall` script will run automatically:
+    
+    <CodeGroup>
+      ```bash npm
+      npm install
+      ```
+      
+      ```bash yarn
+      yarn install
+      ```
+      
+      ```bash pnpm
+      pnpm install
+      ```
+    </CodeGroup>
+    
+    This will install all dependencies including:
+    - React 19.2.0 and React DOM
+    - PrimeReact 10.9.7 UI components
+    - Bootstrap 5.3.8 styling
+    - React Router 7.13.1
+    - FontAwesome icons
+    - TypeScript and Vite build tools
+  </Step>
+  
+  <Step title="Verify installation">
+    Check that all dependencies are installed correctly:
+    
+    ```bash
+    npm list --depth=0
+    ```
+    
+    You should see the main dependencies listed in `package.json`.
+  </Step>
+</Steps>
+
+## Docker Installation
+
+<Steps>
+  <Step title="Ensure Docker is installed">
+    Verify Docker and Docker Compose are available:
+    
+    ```bash
+    docker --version
+    docker compose version
+    ```
+  </Step>
+  
+  <Step title="Review the Dockerfile">
+    SUGO Front includes a production-ready Dockerfile:
+    
+    ```dockerfile
+    FROM node:24.14.0-alpine
+    WORKDIR /app
+    COPY package*.json ./
+    RUN npm install
+    COPY . .
+    EXPOSE 5173
+    CMD ["npm", "run", "dev"]
+    ```
+    
+    <Info>
+      The Dockerfile uses **Node.js 24.14.0-alpine** for a lightweight container image.
+    </Info>
+  </Step>
+  
+  <Step title="Build the Docker image">
+    Build the container image:
+    
+    ```bash
+    docker build -t sugo-front:latest .
+    ```
+  </Step>
+  
+  <Step title="Run the container">
+    Start SUGO Front in a Docker container:
+    
+    ```bash
+    docker run -p 5173:5173 \
+      -v $(pwd):/app \
+      -v /app/node_modules \
+      -e CHOKIDAR_USEPOLLING=true \
+      sugo-front:latest
+    ```
+    
+    **Volume mounts explained:**
+    - `-v $(pwd):/app` - Mounts source code for hot reload
+    - `-v /app/node_modules` - Preserves node_modules in container
+    
+    **Environment variables:**
+    - `CHOKIDAR_USEPOLLING=true` - Enables file watching in Docker
+  </Step>
+  
+  <Step title="Access the application">
+    Open your browser to:
+    
+    ```
+    http://localhost:5173
+    ```
+  </Step>
+</Steps>
+
+## Docker Compose Setup
+
+For integrated backend and frontend deployment, use Docker Compose:
+
+```yaml
+services:
+  sugo-front:
+    build:
+      context: ./SUGO-FRONT
+      dockerfile: Dockerfile
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./SUGO-FRONT:/app
+      - /app/node_modules
+    environment:
+      - CHOKIDAR_USEPOLLING=true
+    depends_on:
+      - sugo-back
+
+  sugo-back:
+    build:
+      context: ./SUGO-BACK
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./SUGO-BACK:/app
+      - /app/node_modules
+    environment:
+      - NODE_ENV=development
+```
+
+Start both services:
+
+```bash
+docker compose up -d
+```
+
+## Environment Configuration
+
+### Development Server Settings
+
+The Vite configuration in `vite.config.ts` includes:
+
+```typescript
+server: {
+  host: true,        // Expose server on all network interfaces
+  port: 5173,        // Default port
+  watch: {
+    usePolling: true // Enable polling for Docker/WSL2
+  }
+}
+```
+
+### Styling Configuration
+
+The application loads styles in this order (see `src/main.tsx`):
+
+```typescript
+import "bootstrap/dist/css/bootstrap.min.css";
+import "bootstrap-icons/font/bootstrap-icons.css";
+import "primereact/resources/themes/saga-blue/theme.css";
+import "primereact/resources/primereact.min.css";
+import "primeicons/primeicons.css";
+import "./App.css";
+```
+
+<Note>
+  The **Saga Blue theme** is used for PrimeReact components. You can change this by modifying the theme import.
+</Note>
+
+## Available Scripts
+
+SUGO Front includes the following npm scripts:
+
+| Script | Command | Description |
+|--------|---------|-------------|
+| `dev` | `vite` | Start development server with HMR |
+| `build` | `tsc -b && vite build` | Type-check and build for production |
+| `lint` | `eslint .` | Run ESLint on the codebase |
+| `preview` | `vite preview` | Preview production build locally |
+| `preinstall` | `node preinstall.js` | Pre-installation script |
+
+## Building for Production
+
+<Steps>
+  <Step title="Run the build command">
+    Build optimized production assets:
+    
+    ```bash
+    npm run build
+    ```
+    
+    This will:
+    1. Run TypeScript type checking (`tsc -b`)
+    2. Build optimized bundles with Vite
+    3. Output to the `dist/` directory
+  </Step>
+  
+  <Step title="Preview the build">
+    Test the production build locally:
+    
+    ```bash
+    npm run preview
+    ```
+  </Step>
+  
+  <Step title="Deploy the dist folder">
+    Deploy the contents of `dist/` to your hosting service (Vercel, Netlify, AWS S3, etc.)
+  </Step>
+</Steps>
+
+## Troubleshooting
+
+<Accordion title="Port 5173 is already in use">
+  If port 5173 is occupied, you can change it in `vite.config.ts`:
+  
+  ```typescript
+  server: {
+    port: 3001, // Use a different port
+    // ...
+  }
+  ```
+  
+  Or use the `--port` flag:
+  
+  ```bash
+  npm run dev -- --port 3001
+  ```
+</Accordion>
+
+<Accordion title="Hot reload not working in Docker">
+  Ensure `CHOKIDAR_USEPOLLING` is set to `true`:
+  
+  ```bash
+  docker run -e CHOKIDAR_USEPOLLING=true ...
+  ```
+  
+  This is already configured in the Vite config:
+  
+  ```typescript
+  watch: {
+    usePolling: true
+  }
+  ```
+</Accordion>
+
+<Accordion title="Module not found errors">
+  Delete `node_modules` and reinstall:
+  
+  ```bash
+  rm -rf node_modules package-lock.json
+  npm install
+  ```
+  
+  For Docker, rebuild without cache:
+  
+  ```bash
+  docker build --no-cache -t sugo-front:latest .
+  ```
+</Accordion>
+
+<Accordion title="TypeScript errors during build">
+  Run TypeScript compiler directly to see detailed errors:
+  
+  ```bash
+  npx tsc -b
+  ```
+  
+  Check `tsconfig.json` and `tsconfig.app.json` for configuration issues.
+</Accordion>
+
+<Accordion title="PrimeReact components not styled correctly">
+  Verify that all required CSS imports are present in `src/main.tsx`:
+  
+  ```typescript
+  import "primereact/resources/themes/saga-blue/theme.css";
+  import "primereact/resources/primereact.min.css";
+  import "primeicons/primeicons.css";
+  ```
+  
+  The order matters - PrimeReact CSS should load after Bootstrap.
+</Accordion>
+
+<Accordion title="Node.js version mismatch">
+  Use Node Version Manager (nvm) to switch to the correct version:
+  
+  ```bash
+  nvm install 24.14.0
+  nvm use 24.14.0
+  ```
+  
+  Or create a `.nvmrc` file:
+  
+  ```
+  24.14.0
+  ```
+</Accordion>
+
+## Verification
+
+After installation, verify everything is working:
+
+<Steps>
+  <Step title="Check the home page">
+    Visit `http://localhost:5173` - you should see the SUGO main page
+  </Step>
+  
+  <Step title="Test the Dispatch form">
+    Navigate to `http://localhost:5173/despacho` and verify:
+    - Module dropdown loads 8 options (Oficinas centrales, Modulo 1-7)
+    - Economic input field is functional
+    - Submit and Clear buttons render with icons
+  </Step>
+  
+  <Step title="Test the Reception form">
+    Navigate to `http://localhost:5173/recepcion` - the reception component should load
+  </Step>
+  
+  <Step title="Check browser console">
+    Open DevTools (F12) and verify there are no error messages
+  </Step>
+</Steps>
+
+<Warning>
+  If you encounter CORS issues when connecting to a backend API, you'll need to configure proxy settings in `vite.config.ts`.
+</Warning>
+
+## Next Steps
+
+<CardGroup cols={2}>
+  <Card title="Explore the Codebase" icon="folder-tree">
+    Review the component structure and custom hooks
+  </Card>
+  
+  <Card title="Customize Modules" icon="sliders">
+    Modify `useModulos.ts` to add your organization's modules
+  </Card>
+  
+  <Card title="Configure Backend" icon="server">
+    Set up API endpoints and integrate with SUGO-BACK
+  </Card>
+  
+  <Card title="Customize Styling" icon="palette">
+    Adjust Bootstrap variables and PrimeReact themes
+  </Card>
+</CardGroup>

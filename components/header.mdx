@@ -1,0 +1,280 @@
+---
+title: Header Component
+description: Navigation header with routing and user menu functionality
+---
+
+## Overview
+
+The `Header` component provides the main navigation bar for the SUGO Front application. It uses PrimeReact's Menubar component and integrates with React Router for seamless navigation between different sections of the application.
+
+**Location**: `src/components/Header.tsx`
+
+## Features
+
+- PrimeReact Menubar integration
+- React Router navigation
+- User icon display
+- Logout button with tooltip
+- Responsive layout
+
+## Full Implementation
+
+```tsx
+import { Menubar } from "primereact/menubar";
+import { Tooltip } from "primereact/tooltip";
+import { useNavigate } from "react-router-dom";
+import { useRef } from "react";
+
+export const Header = () => {
+  // uso del hook useNavigate para la navegación programática entre rutas
+  const navigate = useNavigate();
+
+  // Definición de los ítems del menú principal
+  const items = [
+    {
+      label: "Despacho",
+      icon: "pi pi-fw pi-home",
+      command: () => navigate("/despacho"),
+    },
+    {
+      label: "Recepcion",
+      icon: "pi pi-fw pi-calendar",
+      command: () => navigate("/recepcion"),
+    },
+  ];
+
+  // Referencia para el botón de cerrar sesión (logout)
+  const logoutBtnRef = useRef(null);
+
+  // Elementos que se mostrarán al final (lado derecho) del Menubar
+  const end = (
+    <div style={{ display: "flex", alignItems: "center", gap: "1.5rem" }}>
+      {/* Icono de usuario */}
+      <i className="pi pi-user" style={{ fontSize: "1.1rem" }}></i>
+
+      {/* Botón de cerrar sesión con tooltip */}
+      <button
+        ref={logoutBtnRef}
+        style={{
+          background: "none",
+          border: "none",
+          cursor: "pointer",
+          padding: 0,
+          marginRight: "0.5rem",
+        }}
+        title="Cerrar sesión"
+        aria-label="Cerrar sesión"
+        data-pr-tooltip="Cerrar sesión" // Texto del tooltip
+      >
+        {/* Icono de cerrar sesión */}
+        <i
+          className="pi pi-sign-out"
+          style={{ fontSize: "1.2rem", color: "#4caf50" }}
+        ></i>
+      </button>
+      {/* Tooltip de PrimeReact asociado al botón de cerrar sesión */}
+      <Tooltip
+        target=".logout-btn"
+        position="bottom"
+        mouseTrack
+        mouseTrackTop={12}
+      />
+    </div>
+  );
+
+  return (
+    <div>
+      {/* Menubar principal con los ítems y el contenido al final */}
+      <Menubar model={items} className="menuBar" end={end} />
+    </div>
+  );
+};
+```
+
+## Navigation Items
+
+The header contains two main navigation items defined in the `items` array:
+
+<ParamField path="items[].label" type="string">
+  Display text for the menu item
+</ParamField>
+
+<ParamField path="items[].icon" type="string">
+  PrimeIcons class name for the menu icon
+</ParamField>
+
+<ParamField path="items[].command" type="function">
+  Callback function executed when the menu item is clicked. Uses `navigate()` for routing.
+</ParamField>
+
+### Current Navigation Items
+
+| Label | Icon | Route | Description |
+|-------|------|-------|-------------|
+| Despacho | `pi-home` | `/despacho` | Dispatch form |
+| Recepcion | `pi-calendar` | `/recepcion` | Reception form |
+
+## User Menu (End Section)
+
+The right side of the header contains user-related functionality:
+
+### User Icon
+
+Displays a user profile icon:
+
+```tsx
+<i className="pi pi-user" style={{ fontSize: "1.1rem" }}></i>
+```
+
+### Logout Button
+
+A styled button with logout functionality:
+
+<ParamField path="ref" type="React.RefObject">
+  Reference to the button element for tooltip targeting
+</ParamField>
+
+<ParamField path="style" type="object">
+  Inline styles for button appearance (transparent background, no border)
+</ParamField>
+
+<ParamField path="title" type="string">
+  Native HTML tooltip text: "Cerrar sesión"
+</ParamField>
+
+<ParamField path="aria-label" type="string">
+  Accessibility label for screen readers
+</ParamField>
+
+<ParamField path="data-pr-tooltip" type="string">
+  PrimeReact tooltip content
+</ParamField>
+
+<Note>
+The logout button currently displays the icon and tooltip but does not have logout logic implemented. You'll need to add authentication logic in the `command` handler.
+</Note>
+
+## PrimeReact Components Used
+
+### Menubar
+
+```tsx
+<Menubar model={items} className="menuBar" end={end} />
+```
+
+<ParamField path="model" type="MenuItem[]">
+  Array of menu item objects with label, icon, and command properties
+</ParamField>
+
+<ParamField path="className" type="string">
+  Custom CSS class for styling: `menuBar`
+</ParamField>
+
+<ParamField path="end" type="React.ReactNode">
+  Content to display on the right side of the menubar (user menu)
+</ParamField>
+
+### Tooltip
+
+```tsx
+<Tooltip
+  target=".logout-btn"
+  position="bottom"
+  mouseTrack
+  mouseTrackTop={12}
+/>
+```
+
+<ParamField path="target" type="string">
+  CSS selector for the tooltip target element
+</ParamField>
+
+<ParamField path="position" type="string">
+  Tooltip position relative to target: "bottom"
+</ParamField>
+
+<ParamField path="mouseTrack" type="boolean">
+  Enables tooltip to follow mouse cursor
+</ParamField>
+
+<ParamField path="mouseTrackTop" type="number">
+  Vertical offset for mouse tracking
+</ParamField>
+
+## Usage in Application
+
+The Header component is rendered at the top level in `App.tsx`:
+
+```tsx
+import { Header } from "./components/Header";
+
+export const App = () => {
+  return (
+    <BrowserRouter>
+      <Header />
+      <Routes>
+        {/* Routes here */}
+      </Routes>
+    </BrowserRouter>
+  );
+};
+```
+
+This ensures the header is displayed on all pages and persists across route changes.
+
+## Customization
+
+### Adding New Navigation Items
+
+To add a new menu item, add an object to the `items` array:
+
+```tsx
+const items = [
+  // ... existing items
+  {
+    label: "Reports",
+    icon: "pi pi-fw pi-chart-bar",
+    command: () => navigate("/reports"),
+  },
+];
+```
+
+### Styling the Header
+
+The header uses the `menuBar` CSS class. Customize it in your stylesheet:
+
+```css
+.menuBar {
+  /* Your custom styles */
+}
+```
+
+### Adding Logout Logic
+
+Implement logout functionality in the button's onClick handler:
+
+```tsx
+<button
+  onClick={() => {
+    // Clear authentication tokens
+    // Redirect to login page
+    navigate("/login");
+  }}
+  // ... other props
+>
+```
+
+## Accessibility
+
+The Header component follows accessibility best practices:
+
+- Uses semantic HTML elements
+- Includes `aria-label` for icon-only buttons
+- Provides text alternatives via tooltips
+- Keyboard navigable menu items
+
+## Related Components
+
+- [Sugo_main](/components/sugo-main) - Landing page component
+- [FormularioDespacho](/components/formulario-despacho) - Dispatch form routed from header
+- [FormularioRecepcion](/components/formulario-recepcion) - Reception form routed from header

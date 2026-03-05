@@ -1,0 +1,85 @@
+---
+title: Custom Hooks Overview
+description: Reusable React hooks for common functionality in SUGO Front
+---
+
+## Purpose
+
+Custom hooks in SUGO Front encapsulate reusable logic and stateful behavior that can be shared across multiple components. They follow React's hooks conventions and provide a clean way to manage data fetching, state management, and component logic.
+
+## Available Hooks
+
+<CardGroup cols={2}>
+  <Card title="useModulos" icon="cube" href="/hooks/use-modulos">
+    Manages module data and provides formatted options for dropdown components
+  </Card>
+  
+  <Card title="useHook_General" icon="layer-group" href="/hooks/use-hook-general">
+    Aggregates multiple custom hooks into a single, convenient interface
+  </Card>
+</CardGroup>
+
+## Hook Patterns and Conventions
+
+### Naming Convention
+All custom hooks follow the React convention of starting with `use` prefix:
+- `useModulos` - Manages modules
+- `useHook_General` - General hook aggregator
+
+### TypeScript Types
+All hooks are fully typed with TypeScript, providing:
+- Type-safe return values
+- Intellisense support
+- Compile-time error checking
+
+### Return Values
+Hooks return objects with named properties for easy destructuring:
+
+```tsx
+const { modulosOptions } = useHook_General();
+```
+
+## When to Use Custom Hooks
+
+### Use custom hooks when you need to:
+
+1. **Share logic between components**
+   - Multiple components need the same data or behavior
+   - Avoid code duplication across the application
+
+2. **Manage complex state**
+   - Handle data fetching and loading states
+   - Format data for specific UI components
+
+3. **Abstract component logic**
+   - Keep components focused on rendering
+   - Separate business logic from presentation
+
+4. **Compose functionality**
+   - Combine multiple hooks into higher-level hooks
+   - Create domain-specific abstractions
+
+## Usage Example
+
+```tsx
+import { useHook_General } from '../hooks/useHook';
+
+export const MyComponent = () => {
+  const { modulosOptions } = useHook_General();
+  
+  return (
+    <Dropdown 
+      options={modulosOptions}
+      onChange={(e) => console.log(e.value)}
+    />
+  );
+};
+```
+
+## Benefits
+
+- **Reusability**: Write once, use everywhere
+- **Testability**: Hooks can be tested independently
+- **Maintainability**: Centralized logic is easier to update
+- **Type Safety**: Full TypeScript support
+- **Separation of Concerns**: Keep components clean and focused

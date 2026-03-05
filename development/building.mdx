@@ -1,0 +1,240 @@
+---
+title: Building and Scripts
+description: Build commands, npm scripts, and compilation process for SUGO Front
+---
+
+## Available Scripts
+
+The project includes the following npm scripts defined in `package.json`:
+
+<Tabs>
+  <Tab title="Development">
+    Start the development server with hot module replacement:
+    
+    ```bash
+    npm run dev
+    ```
+    
+    This runs the `vite` command and starts the development server on port 5173.
+    
+    **Features:**
+    - Hot Module Replacement (HMR)
+    - Fast refresh for React components
+    - File watching with polling support
+  </Tab>
+  
+  <Tab title="Build">
+    Build the application for production:
+    
+    ```bash
+    npm run build
+    ```
+    
+    This executes: `tsc -b && vite build`
+    
+    **Process:**
+    1. TypeScript compilation with build mode (`tsc -b`)
+    2. Vite production build with optimizations
+    3. Output generated in the `dist/` directory
+  </Tab>
+  
+  <Tab title="Preview">
+    Preview the production build locally:
+    
+    ```bash
+    npm run preview
+    ```
+    
+    This runs `vite preview` to serve the built application from the `dist/` directory.
+  </Tab>
+  
+  <Tab title="Lint">
+    Run ESLint to check code quality:
+    
+    ```bash
+    npm run lint
+    ```
+    
+    This executes `eslint .` to check all files in the project.
+  </Tab>
+</Tabs>
+
+## Build Process
+
+### TypeScript Compilation
+
+The build process starts with TypeScript compilation:
+
+```bash
+tsc -b
+```
+
+This uses the TypeScript build mode which:
+- Respects project references in `tsconfig.json`
+- Compiles both app and node configurations
+- Generates build info in `node_modules/.tmp/`
+- Validates types without emitting JavaScript files
+
+### Vite Build
+
+After TypeScript validation, Vite handles the production build:
+
+```bash
+vite build
+```
+
+**Build optimizations include:**
+- Code splitting
+- Tree shaking
+- Minification
+- Asset optimization
+- CSS processing
+
+## Vite Configuration
+
+The project uses a custom Vite configuration in `vite.config.ts`:
+
+```typescript
+import { defineConfig } from "vite";
+import react from "@vitejs/plugin-react";
+
+export default defineConfig({
+  plugins: [react()],
+  server: {
+    host: true,
+    port: 5173,
+    watch: {
+      usePolling: true,
+    },
+  },
+});
+```
+
+### Configuration Details
+
+- **Plugins**: Uses `@vitejs/plugin-react` for React Fast Refresh
+- **Server Host**: `true` (binds to 0.0.0.0, accessible from all network interfaces)
+- **Port**: 5173 (default Vite port)
+- **File Watching**: Polling enabled for compatibility with Docker and WSL
+
+<Note>
+  File watching uses polling mode (`usePolling: true`) which is essential for Docker environments where filesystem events may not propagate correctly.
+</Note>
+
+## Linting
+
+### ESLint Configuration
+
+The project uses a modern ESLint flat config (`eslint.config.js`):
+
+```javascript
+import js from '@eslint/js'
+import globals from 'globals'
+import reactHooks from 'eslint-plugin-react-hooks'
+import reactRefresh from 'eslint-plugin-react-refresh'
+import tseslint from 'typescript-eslint'
+
+export default defineConfig([
+  globalIgnores(['dist']),
+  {
+    files: ['**/*.{ts,tsx}'],
+    extends: [
+      js.configs.recommended,
+      tseslint.configs.recommended,
+      reactHooks.configs.flat.recommended,
+      reactRefresh.configs.vite,
+    ],
+    languageOptions: {
+      ecmaVersion: 2020,
+      globals: globals.browser,
+    },
+  },
+])
+```
+
+**Features:**
+- JavaScript recommended rules
+- TypeScript ESLint recommended rules
+- React Hooks linting (enforces rules of hooks)
+- React Refresh plugin (ensures HMR compatibility)
+- Browser globals
+- Ignores `dist/` directory
+
+### Running the Linter
+
+```bash
+# Check for linting errors
+npm run lint
+
+# Fix auto-fixable issues (manual)
+eslint . --fix
+```
+
+## TypeScript Settings
+
+### Compiler Options
+
+Key TypeScript compiler options for the application:
+
+- **Target**: ES2022
+- **Module**: ESNext
+- **JSX**: react-jsx (automatic JSX runtime)
+- **Module Resolution**: bundler
+- **Strict Mode**: Enabled
+- **No Emit**: true (Vite handles the build)
+
+### Linting Options
+
+```json
+"strict": true,
+"noUnusedLocals": true,
+"noUnusedParameters": true,
+"noFallthroughCasesInSwitch": true,
+"noUncheckedSideEffectImports": true
+```
+
+These options ensure:
+- Strict type checking
+- No unused variables or parameters
+- No fallthrough in switch statements
+- Checked side-effect imports
+
+## Development Dependencies
+
+Key development tools and their versions:
+
+```json
+{
+  "@vitejs/plugin-react": "^5.1.1",
+  "eslint": "^9.39.1",
+  "typescript": "~5.9.3",
+  "typescript-eslint": "^8.48.0",
+  "vite": "^7.3.1"
+}
+```
+
+## Production Dependencies
+
+Main runtime dependencies:
+
+- **React**: 19.2.0
+- **React DOM**: 19.2.0
+- **React Router DOM**: 7.13.1
+- **PrimeReact**: 10.9.7 (UI component library)
+- **Bootstrap**: 5.3.8
+- **FontAwesome**: 7.2.0
+
+## Build Output
+
+After running `npm run build`, the production files are generated in:
+
+```
+dist/
+├── assets/       # JavaScript, CSS, and other assets
+├── index.html    # Main HTML file
+└── ...           # Other build artifacts
+```
+
+<Tip>
+  Use `npm run preview` to test the production build locally before deployment.
+</Tip>

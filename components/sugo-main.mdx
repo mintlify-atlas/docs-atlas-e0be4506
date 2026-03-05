@@ -1,0 +1,229 @@
+---
+title: Sugo_main Component
+description: Main landing page component for the SUGO Front application
+---
+
+## Overview
+
+The `Sugo_main` component serves as the landing page for the SUGO Front application. It displays a centered "SUGO" title and acts as the default route when users access the application root.
+
+**Location**: `src/components/Sugo_main.tsx`
+
+## Features
+
+- Centered layout
+- Simple and clean design
+- Custom typography styling
+- Vertical centering using flexbox
+
+## Full Implementation
+
+```tsx
+export const Sugo_main = () => {
+  return (
+    <>
+      <div
+        className="d-flex justify-content-center align-items-center"
+        style={{ height: "80vh" }}
+      >
+        <p className="texto_sugo">SUGO</p>
+      </div>
+    </>
+  );
+};
+```
+
+## Component Structure
+
+The component uses a simple structure with Bootstrap utility classes and custom styling:
+
+### Container Div
+
+The outer container uses flexbox for centering:
+
+```tsx
+<div
+  className="d-flex justify-content-center align-items-center"
+  style={{ height: "80vh" }}
+>
+```
+
+**CSS Classes**:
+- `d-flex`: Enables flexbox display
+- `justify-content-center`: Centers content horizontally
+- `align-items-center`: Centers content vertically
+
+**Inline Style**:
+- `height: "80vh"`: Sets container height to 80% of viewport height
+
+<Note>
+The 80vh height ensures the content is centered vertically while leaving space for the Header component above.
+</Note>
+
+### Title Element
+
+The main "SUGO" text uses a custom CSS class:
+
+```tsx
+<p className="texto_sugo">SUGO</p>
+```
+
+The `texto_sugo` class should be defined in your CSS file for custom typography:
+
+```css
+.texto_sugo {
+  /* Add your custom font size, weight, color, etc. */
+  font-size: 4rem;
+  font-weight: bold;
+  color: #333;
+}
+```
+
+## Layout and Styling
+
+### Flexbox Centering
+
+The component uses the flexbox centering technique:
+
+1. **Horizontal centering**: `justify-content-center`
+2. **Vertical centering**: `align-items-center`
+3. **Viewport height**: `80vh` provides vertical space
+
+### Bootstrap Integration
+
+Leverages Bootstrap utility classes for responsive layout:
+
+- `d-flex`: Display flex
+- `justify-content-center`: Horizontal alignment
+- `align-items-center`: Vertical alignment
+
+## Usage in Application
+
+The `Sugo_main` component is rendered as the root route in `App.tsx`:
+
+```tsx
+import { Sugo_main } from "./components/Sugo_main";
+
+export const App = () => {
+  return (
+    <BrowserRouter>
+      <Header />
+      <Routes>
+        <Route path="/" element={<Sugo_main />} />
+        {/* Other routes */}
+      </Routes>
+    </BrowserRouter>
+  );
+};
+```
+
+When users navigate to the root path (`/`), they see the Sugo_main landing page.
+
+## Customization
+
+### Changing the Title
+
+Modify the text content:
+
+```tsx
+<p className="texto_sugo">Welcome to SUGO</p>
+```
+
+### Adjusting Vertical Space
+
+Change the viewport height value:
+
+```tsx
+style={{ height: "90vh" }} // More vertical space
+style={{ height: "70vh" }} // Less vertical space
+```
+
+### Adding Additional Content
+
+Expand the component with more elements:
+
+```tsx
+export const Sugo_main = () => {
+  return (
+    <div
+      className="d-flex flex-column justify-content-center align-items-center"
+      style={{ height: "80vh" }}
+    >
+      <p className="texto_sugo">SUGO</p>
+      <p className="subtitle">Sistema Único de Gestión Operativa</p>
+      <Button label="Get Started" onClick={() => navigate('/despacho')} />
+    </div>
+  );
+};
+```
+
+<Note>
+Add `flex-column` class to stack elements vertically when adding more content.
+</Note>
+
+### Custom Styling
+
+Define the `texto_sugo` class in your CSS:
+
+```css
+/* Custom landing page title */
+.texto_sugo {
+  font-size: 5rem;
+  font-weight: 700;
+  color: #2c3e50;
+  letter-spacing: 0.2rem;
+  text-transform: uppercase;
+  margin: 0;
+  padding: 1rem;
+}
+
+/* Responsive sizing */
+@media (max-width: 768px) {
+  .texto_sugo {
+    font-size: 3rem;
+  }
+}
+```
+
+## Props
+
+The component currently accepts no props. It's a stateless presentational component.
+
+<ParamField path="No props" type="void">
+  This component does not accept any props in its current implementation
+</ParamField>
+
+## State Management
+
+The component uses no state. It's a pure presentational component.
+
+## Responsive Design
+
+To make the component fully responsive:
+
+1. Add media queries to the `texto_sugo` CSS class
+2. Use responsive Bootstrap classes
+3. Consider viewport-relative font sizes (vw units)
+
+```css
+.texto_sugo {
+  font-size: clamp(2rem, 5vw, 5rem);
+}
+```
+
+## Future Enhancements
+
+Potential improvements for the landing page:
+
+- Add a subtitle or description
+- Include quick action buttons
+- Display system status or notifications
+- Add animations or transitions
+- Show recent activity or statistics
+- Include navigation cards to main sections
+
+## Related Components
+
+- [Header](/components/header) - Navigation component displayed above
+- [FormularioDespacho](/components/formulario-despacho) - Dispatch form (navigate from here)
+- [FormularioRecepcion](/components/formulario-recepcion) - Reception form (navigate from here)

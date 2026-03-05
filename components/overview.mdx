@@ -1,0 +1,144 @@
+---
+title: Components Overview
+description: Overview of the SUGO Front component architecture and available components
+---
+
+## Component Architecture
+
+SUGO Front follows a modular component architecture built with React and TypeScript. The application uses PrimeReact as the primary UI component library, providing a consistent and professional interface.
+
+### Core Principles
+
+- **Functional Components**: All components use React functional components with hooks
+- **React Router Integration**: Components integrate seamlessly with React Router for navigation
+- **PrimeReact UI**: Leverages PrimeReact components for a polished user experience
+- **Custom Styling**: Bootstrap utilities combined with custom CSS classes
+
+## Available Components
+
+<CardGroup cols={2}>
+  <Card title="Header" icon="navigation" href="/components/header">
+    Navigation bar with routing and user menu
+  </Card>
+  
+  <Card title="Sugo_main" icon="home" href="/components/sugo-main">
+    Main landing page component
+  </Card>
+  
+  <Card title="FormularioDespacho" icon="file-text" href="/components/formulario-despacho">
+    Dispatch form with validation and state management
+  </Card>
+  
+  <Card title="FormularioRecepcion" icon="inbox" href="/components/formulario-recepcion">
+    Reception form component
+  </Card>
+</CardGroup>
+
+## PrimeReact Integration
+
+SUGO Front extensively uses PrimeReact components for UI elements:
+
+### Navigation Components
+- **Menubar**: Main navigation menu
+- **Tooltip**: Interactive tooltips for user guidance
+
+### Form Components
+- **InputText**: Text input fields with floating labels
+- **Dropdown**: Select dropdowns with custom options
+- **Button**: Action buttons with icons and severity levels
+
+### Layout Components
+- **TabView/TabPanel**: Tabbed interface for organizing content
+- **Card**: Container component for grouped content
+
+<Note>
+All PrimeReact components are themed consistently across the application. See the [Installation](/getting-started/installation) guide for theme setup.
+</Note>
+
+## Component Patterns
+
+### 1. Navigation Pattern
+
+Components use React Router's `useNavigate` hook for programmatic navigation:
+
+```tsx
+import { useNavigate } from "react-router-dom";
+
+const navigate = useNavigate();
+navigate("/despacho");
+```
+
+### 2. State Management Pattern
+
+Local state is managed using React's `useState` hook:
+
+```tsx
+const [selectModulo, setSelectModulo] = useState(null);
+```
+
+### 3. Custom Hooks Pattern
+
+Custom hooks encapsulate reusable logic:
+
+```tsx
+import { useHook_General } from "../hooks/useHook";
+const { modulosOptions } = useHook_General();
+```
+
+### 4. Floating Label Pattern
+
+PrimeReact's floating label pattern is used consistently:
+
+```tsx
+<span className="p-float-label">
+  <InputText id="field-id" />
+  <label htmlFor="field-id">Label Text</label>
+</span>
+```
+
+## Application Structure
+
+The main application structure in `App.tsx`:
+
+```tsx
+<BrowserRouter>
+  <Header />
+  <Routes>
+    <Route path="/" element={<Sugo_main />} />
+    <Route path="/despacho" element={<FormularioDespacho />} />
+    <Route path="/recepcion" element={<FormularioRecepcion />} />
+  </Routes>
+</BrowserRouter>
+```
+
+- **Header**: Persistent navigation across all routes
+- **Routes**: Route definitions for different views
+- **Layout**: Header + content area structure
+
+## Styling Approach
+
+### CSS Classes
+
+- **Bootstrap Utilities**: `d-flex`, `justify-content-center`, `gap-3`, etc.
+- **Custom Classes**: `menuBar`, `texto_sugo`, `tabpanel`, `select`
+- **PrimeReact Classes**: `p-float-label` for floating labels
+
+### Inline Styles
+
+Used sparingly for dynamic styling:
+
+```tsx
+style={{ height: "80vh", display: "flex", gap: "1.5rem" }}
+```
+
+## Next Steps
+
+<CardGroup cols={2}>
+  <Card title="Header Component" icon="navigation" href="/components/header">
+    Learn about the navigation header
+  </Card>
+  
+  <Card title="Form Components" icon="file-text" href="/components/formulario-despacho">
+    Explore form implementation
+  </Card>
+</CardGroup>

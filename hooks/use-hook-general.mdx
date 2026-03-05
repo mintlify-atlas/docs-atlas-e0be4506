@@ -1,0 +1,229 @@
+---
+title: useHook_General
+description: Aggregated hook that combines multiple custom hooks into a single interface
+---
+
+## Overview
+
+The `useHook_General` hook is a convenience hook that aggregates multiple custom hooks into a single, unified interface. This pattern simplifies component code by providing a single import point for commonly used hooks.
+
+## Source Code
+
+```typescript hooks/useHook.ts
+import { useModulos } from "./useModulos";
+
+export const useHook_General = () => {
+  const { modulosOptions } = useModulos();
+  return { modulosOptions };
+};
+```
+
+## Purpose and Benefits
+
+### Aggregation Pattern
+
+The hook uses the aggregation pattern to:
+
+1. **Simplify imports**: Import one hook instead of multiple
+2. **Centralize hook composition**: Manage hook dependencies in one place
+3. **Provide consistency**: Ensure components use the same hook combinations
+4. **Enable scalability**: Easy to add new hooks to the interface
+
+### When to Use
+
+Use `useHook_General` when:
+- You need access to commonly used hooks
+- You want to reduce import statements in components
+- Multiple components need the same hook combination
+
+## Return Values
+
+<ResponseField name="modulosOptions" type="ModuloOption[]">
+  Array of module objects formatted for PrimeReact Dropdown components. Returned from the `useModulos` hook.
+  
+  Each option contains:
+  - `id` (number): Module identifier
+  - `nombre` (string): Module name
+  - `label` (string): Display label for dropdown
+  - `value` (number): Selection value for dropdown
+</ResponseField>
+
+## How It Works
+
+### Hook Aggregation
+
+The hook internally calls other custom hooks and returns their values:
+
+```tsx
+// Inside useHook_General
+const { modulosOptions } = useModulos();  // Call useModulos
+return { modulosOptions };                 // Return its values
+```
+
+This creates a single point of access for multiple hook functionalities.
+
+### Future Extensions
+
+The pattern allows easy extension:
+
+```tsx
+// Example: Adding more hooks
+import { useModulos } from "./useModulos";
+import { useMotivos } from "./useMotivos";
+import { useEconomicos } from "./useEconomicos";
+
+export const useHook_General = () => {
+  const { modulosOptions } = useModulos();
+  const { motivosOptions } = useMotivos();
+  const { economicosData } = useEconomicos();
+  
+  return { 
+    modulosOptions,
+    motivosOptions,
+    economicosData 
+  };
+};
+```
+
+## Usage Examples
+
+### Basic Usage
+
+```tsx
+import { useHook_General } from '../hooks/useHook';
+import { Dropdown } from 'primereact/dropdown';
+import { useState } from 'react';
+
+export const MyComponent = () => {
+  const { modulosOptions } = useHook_General();
+  const [selected, setSelected] = useState(null);
+  
+  return (
+    <Dropdown
+      value={selected}
+      onChange={(e) => setSelected(e.value)}
+      options={modulosOptions}
+    />
+  );
+};
+```
+
+### Real Usage in FormularioDespacho
+
+From `src/Despacho/FormularioDespacho.tsx`:
+
+```tsx FormularioDespacho.tsx
+import { TabView, TabPanel } from "primereact/tabview";
+import { Dropdown } from "primereact/dropdown";
+import { Button } from "primereact/button";
+import { useState } from "react";
+import { useHook_General } from "../hooks/useHook";
+
+export const FormularioDespacho = () => {
+  const { modulosOptions } = useHook_General();
+  const [selectModulo, setSelectModulo] = useState(null);
+
+  return (
+    <TabView>
+      <TabPanel className="tabpanel" header="Despacho">
+        <div className="d-flex justify-content-center">
+          <div className="card">
+            <div className="titulo">
+              <h1>Formulario de despacho</h1>
+              <hr />
+            </div>
+
+            <div className="d-flex flex-row gap-3 mt-4 py-2 p-4">
+              {/* modulo */}
+              <span className="p-float-label">
+                <Dropdown
+                  inputId="dd-city"
+                  value={selectModulo}
+                  onChange={(e) => setSelectModulo(e.value)}
+                  options={modulosOptions}
+                  className="select"
+                />
+                <label htmlFor="dd-city">Modulo</label>
+              </span>
+
+              {/* Other form fields... */}
+            </div>
+
+            <div className="d-flex justify-content-center gap-3 mt-4">
+              <Button icon="pi pi-check" label="Enviar" severity="success" />
+              <Button icon="pi pi-times" label="Limpiar" severity="danger" />
+            </div>
+          </div>
+        </div>
+      </TabPanel>
+    </TabView>
+  );
+};
+```
+
+### Multiple Components Using Same Hook
+
+```tsx
+// Component 1
+export const ModuleForm = () => {
+  const { modulosOptions } = useHook_General();
+  // Use modulosOptions...
+};
+
+// Component 2
+export const ModuleFilter = () => {
+  const { modulosOptions } = useHook_General();
+  // Use same modulosOptions...
+};
+
+// Component 3
+export const ModuleReport = () => {
+  const { modulosOptions } = useHook_General();
+  // Use same modulosOptions...
+};
+```
+
+All components get consistent module data through a single hook interface.
+
+## Advantages Over Direct Hook Usage
+
+### Without useHook_General
+
+```tsx
+import { useModulos } from '../hooks/useModulos';
+import { useMotivos } from '../hooks/useMotivos';
+import { useEconomicos } from '../hooks/useEconomicos';
+
+export const MyComponent = () => {
+  const { modulosOptions } = useModulos();
+  const { motivosOptions } = useMotivos();
+  const { economicosData } = useEconomicos();
+  
+  // Component logic...
+};
+```
+
+### With useHook_General
+
+```tsx
+import { useHook_General } from '../hooks/useHook';
+
+export const MyComponent = () => {
+  const { modulosOptions, motivosOptions, economicosData } = useHook_General();
+  
+  // Component logic...
+};
+```
+
+## Design Pattern
+
+This follows the **Facade Pattern** in software design:
+
+- **Simplifies interface**: Provides a simple interface to complex subsystems
+- **Reduces coupling**: Components don't need to know about individual hooks
+- **Centralizes changes**: Modifications to hook composition happen in one place
+- **Improves maintainability**: Easier to refactor hook dependencies
+
+## Related Hooks
+
+- [useModulos](/hooks/use-modulos) - Module data management hook (aggregated by this hook)

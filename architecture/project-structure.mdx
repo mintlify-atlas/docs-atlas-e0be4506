@@ -1,0 +1,296 @@
+---
+title: Project Structure
+description: Codebase organization and file structure of SUGO Front
+---
+
+## Overview
+
+SUGO Front follows a feature-based organization structure with clear separation between components, business logic, and assets.
+
+## Directory Structure
+
+### Root Structure
+
+```
+sugo-front/
+├── src/                  # Source code
+├── public/              # Static assets
+├── node_modules/        # Dependencies
+├── package.json         # Project configuration
+├── tsconfig.json        # TypeScript config root
+├── tsconfig.app.json    # App TypeScript config
+├── tsconfig.node.json   # Node TypeScript config
+├── vite.config.ts       # Vite configuration
+└── eslint.config.js     # ESLint configuration
+```
+
+### Source Directory (`src/`)
+
+The main source code is organized as follows:
+
+```
+src/
+├── App.tsx              # Main app component with routing
+├── App.css              # Global application styles
+├── main.tsx             # Application entry point
+├── index.css            # Global CSS imports
+│
+├── components/          # Shared/reusable components
+│   ├── Header.tsx
+│   └── Sugo_main.tsx
+│
+├── Despacho/           # Dispatch module
+│   └── FormularioDespacho.tsx
+│
+├── Recepcion/          # Reception module
+│   └── FormularioRecepcion.tsx
+│
+├── hooks/              # Custom React hooks
+│   ├── useHook.ts
+│   └── useModulos.ts
+│
+└── assets/             # Static assets (images, icons)
+    └── react.svg
+```
+
+<Info>
+The codebase uses **feature-based folders** (Despacho, Recepcion) for domain-specific components, while shared components live in the `components/` directory.
+</Info>
+
+## File Organization Patterns
+
+### Components
+
+**Location**: `src/components/`, `src/Despacho/`, `src/Recepcion/`
+
+<CodeGroup>
+
+```tsx Example Component Structure
+// Shared components
+src/components/Header.tsx
+src/components/Sugo_main.tsx
+
+// Feature-specific components
+src/Despacho/FormularioDespacho.tsx
+src/Recepcion/FormularioRecepcion.tsx
+```
+
+</CodeGroup>
+
+**Naming Convention**:
+- PascalCase for component files: `FormularioDespacho.tsx`
+- Descriptive names reflecting functionality
+- `.tsx` extension for React components with JSX
+
+### Hooks
+
+**Location**: `src/hooks/`
+
+```
+src/hooks/
+├── useHook.ts        # Generic/utility hooks
+└── useModulos.ts     # Module-specific hooks
+```
+
+**Naming Convention**:
+- camelCase with `use` prefix: `useModulos.ts`
+- `.ts` extension for TypeScript files
+- Descriptive names indicating hook purpose
+
+### Styles
+
+**Location**: Root of `src/` and feature folders
+
+```
+src/
+├── App.css           # App-level styles
+└── index.css         # Global styles and imports
+```
+
+**Style Loading Order** (from `main.tsx`):
+1. Bootstrap CSS
+2. Bootstrap Icons
+3. PrimeReact theme
+4. PrimeReact core CSS
+5. PrimeIcons
+6. Custom `App.css`
+
+### Assets
+
+**Location**: `src/assets/`
+
+```
+src/assets/
+└── react.svg         # Static images, icons, fonts
+```
+
+<Tip>
+Vite automatically optimizes assets imported from `src/assets/`. Use ES module imports for assets:
+```tsx
+import logo from './assets/react.svg'
+```
+</Tip>
+
+## Module Organization
+
+### Feature Modules
+
+The application uses a **module-based structure** for major features:
+
+<CardGroup cols={2}>
+  <Card title="Despacho" icon="box">
+    Dispatch/shipping functionality
+    - `FormularioDespacho.tsx`
+  </Card>
+  <Card title="Recepcion" icon="inbox">
+    Reception/receiving functionality
+    - `FormularioRecepcion.tsx`
+  </Card>
+</CardGroup>
+
+Each module:
+- Has its own directory under `src/`
+- Contains module-specific components
+- Can be extended with additional files (services, types, utils)
+
+### Shared Components
+
+Components used across multiple routes live in `src/components/`:
+
+| Component | Purpose | Usage |
+|-----------|---------|-------|
+| `Header.tsx` | Navigation header | Persistent across all routes |
+| `Sugo_main.tsx` | Home page/landing | Root route `/` |
+
+## File Naming Conventions
+
+### TypeScript/React Files
+
+<AccordionGroup>
+  <Accordion title="Component Files">
+    - **Format**: `PascalCase.tsx`
+    - **Examples**: `Header.tsx`, `FormularioDespacho.tsx`
+    - **Rule**: Component name matches file name
+  </Accordion>
+  
+  <Accordion title="Hook Files">
+    - **Format**: `useCamelCase.ts`
+    - **Examples**: `useHook.ts`, `useModulos.ts`
+    - **Rule**: Start with `use` prefix, followed by descriptive name
+  </Accordion>
+  
+  <Accordion title="Utility Files">
+    - **Format**: `camelCase.ts`
+    - **Examples**: `helpers.ts`, `constants.ts`
+    - **Rule**: Descriptive lowercase names
+  </Accordion>
+</AccordionGroup>
+
+### Configuration Files
+
+- `package.json` - NPM package configuration
+- `tsconfig.json` - TypeScript base configuration
+- `tsconfig.app.json` - App-specific TypeScript settings
+- `vite.config.ts` - Vite bundler configuration
+- `eslint.config.js` - Linting rules
+
+## Import Patterns
+
+### Absolute vs Relative Imports
+
+The project uses **relative imports** from `src/`:
+
+<CodeGroup>
+
+```tsx App.tsx
+import { Header } from "./components/Header";
+import { Sugo_main } from "./components/Sugo_main";
+import { FormularioRecepcion } from "./Recepcion/FormularioRecepcion";
+import { FormularioDespacho } from "./Despacho/FormularioDespacho";
+```
+
+```tsx main.tsx
+import { App } from "./App";
+import "bootstrap/dist/css/bootstrap.min.css";
+import "./App.css";
+```
+
+</CodeGroup>
+
+### Import Order Convention
+
+1. External libraries (React, React Router)
+2. Internal components
+3. Styles (if imported in component)
+
+## Extending the Structure
+
+### Adding a New Feature Module
+
+<Steps>
+  <Step title="Create Module Directory">
+    ```bash
+    mkdir src/NewModule
+    ```
+  </Step>
+  <Step title="Add Component">
+    Create main component: `src/NewModule/FormularioNewModule.tsx`
+  </Step>
+  <Step title="Register Route">
+    Add route in `App.tsx`:
+    ```tsx
+    <Route path="/newmodule" element={<FormularioNewModule />} />
+    ```
+  </Step>
+  <Step title="Update Navigation">
+    Add link in `Header.tsx` component
+  </Step>
+</Steps>
+
+### Adding Shared Components
+
+```bash
+# Add to components directory
+src/components/NewComponent.tsx
+
+# Import where needed
+import { NewComponent } from "./components/NewComponent";
+```
+
+### Adding Custom Hooks
+
+```bash
+# Add to hooks directory
+src/hooks/useNewFeature.ts
+
+# Import in components
+import { useNewFeature } from "../hooks/useNewFeature";
+```
+
+## Best Practices
+
+<CardGroup cols={2}>
+  <Card title="Colocation" icon="layer-group">
+    Keep related files close together in feature folders
+  </Card>
+  <Card title="Single Responsibility" icon="bullseye">
+    One component per file, one concern per component
+  </Card>
+  <Card title="Consistent Naming" icon="tag">
+    Follow established naming conventions throughout
+  </Card>
+  <Card title="Logical Grouping" icon="folder">
+    Group by feature first, then by type
+  </Card>
+</CardGroup>
+
+## Next Steps
+
+<CardGroup cols={2}>
+  <Card title="Architecture Overview" icon="sitemap" href="/architecture/overview">
+    Learn about the overall architecture
+  </Card>
+  <Card title="Routing" icon="route" href="/architecture/routing">
+    Understand navigation and routing
+  </Card>
+</CardGroup>

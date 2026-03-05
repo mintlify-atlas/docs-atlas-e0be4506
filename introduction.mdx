@@ -1,0 +1,81 @@
+---
+title: Introduction
+description: Welcome to SUGO Front - A modern React application for dispatch and reception management
+---
+
+## What is SUGO Front?
+
+SUGO Front is a web-based management system built with React and TypeScript that streamlines dispatch (despacho) and reception (recepción) operations. The application provides intuitive form interfaces for tracking vehicle movements and managing module assignments within your organization.
+
+## Key Features
+
+<CardGroup cols={2}>
+  <Card title="Dispatch Management" icon="truck-fast">
+    Complete dispatch form system with module selection, vehicle economic numbers, and reason tracking using PrimeReact components
+  </Card>
+  
+  <Card title="Reception Management" icon="clipboard-check">
+    Dedicated reception form interface for incoming vehicle and material tracking
+  </Card>
+  
+  <Card title="Modern UI Components" icon="paintbrush">
+    Built with PrimeReact components including TabView, Dropdown, InputText, and Buttons for a professional interface
+  </Card>
+  
+  <Card title="Custom Hooks" icon="code">
+    Reusable React hooks like `useModulos` for managing module data and application state
+  </Card>
+  
+  <Card title="Responsive Design" icon="mobile">
+    Bootstrap 5 integration ensures the application works seamlessly across all device sizes
+  </Card>
+  
+  <Card title="Docker Support" icon="docker">
+    Production-ready Docker configuration for easy deployment and containerization
+  </Card>
+</CardGroup>
+
+## Technology Stack
+
+SUGO Front is built with cutting-edge technologies:
+
+- **React 19.2.0** - Latest React version with modern features
+- **TypeScript 5.9.3** - Type-safe development experience
+- **Vite 7.3.1** - Lightning-fast build tool with HMR
+- **PrimeReact 10.9.7** - Rich UI component library
+- **Bootstrap 5.3.8** - Responsive CSS framework
+- **React Router 7.13.1** - Client-side routing
+- **FontAwesome** - Comprehensive icon library
+
+## Project Architecture
+
+The application follows a modular structure:
+
+```
+src/
+├── App.tsx              # Main app component with routing
+├── main.tsx             # Application entry point
+├── components/          # Reusable UI components
+│   ├── Header.tsx
+│   └── Sugo_main.tsx
+├── Despacho/           # Dispatch module
+│   └── FormularioDespacho.tsx
+├── Recepcion/          # Reception module
+│   └── FormularioRecepcion.tsx
+└── hooks/              # Custom React hooks
+    ├── useModulos.ts
+    └── useHook.ts
+```
+
+## Use Cases
+
+SUGO Front is ideal for:
+
+- Logistics companies managing vehicle dispatch and reception
+- Warehouse operations tracking incoming and outgoing materials
+- Transportation hubs coordinating vehicle movements
+- Organizations needing centralized module assignment systems
+
+<Info>
+  SUGO Front runs on port **5173** by default and can be easily integrated with backend services through environment configuration.
+</Info>

@@ -1,0 +1,370 @@
+---
+title: FormularioRecepcion Component
+description: Reception form component for processing incoming vehicles or units
+---
+
+## Overview
+
+The `FormularioRecepcion` component provides a form interface for receiving vehicles or units. This component is currently in early development and displays a placeholder.
+
+**Location**: `src/Recepcion/FormularioRecepcion.tsx`
+
+## Current Implementation
+
+```tsx
+export const FormularioRecepcion = () => {
+  return <div>FormularioRecepcion</div>;
+};
+```
+
+## Current Status
+
+<Note>
+This component is currently a placeholder. It displays only the text "FormularioRecepcion" and has no functionality implemented yet.
+</Note>
+
+## Planned Features
+
+Based on the application structure and the similar `FormularioDespacho` component, the reception form should include:
+
+### Form Fields
+
+- **Modulo (Module)**: Dropdown to select receiving module
+- **Economico (Economic Number)**: Text input for vehicle identification
+- **Estado (Condition)**: Dropdown or checklist for vehicle condition
+- **Observaciones (Observations)**: Text area for additional notes
+- **Hora de Recepción (Reception Time)**: Timestamp or time picker
+
+### UI Components
+
+Expected PrimeReact components:
+
+- **TabView/TabPanel**: Tabbed interface for organization
+- **Dropdown**: Select inputs for modules and conditions
+- **InputText**: Text inputs for vehicle information
+- **InputTextarea**: Multi-line input for observations
+- **Calendar**: Date/time picker for reception time
+- **Button**: Submit and clear actions
+- **Card**: Container for form layout
+
+### State Management
+
+Recommended state structure:
+
+```tsx
+const [formData, setFormData] = useState({
+  modulo: null,
+  economico: "",
+  estado: null,
+  observaciones: "",
+  horaRecepcion: new Date()
+});
+```
+
+### Custom Hooks
+
+Expected hook usage:
+
+```tsx
+import { useHook_General } from "../hooks/useHook";
+
+const { 
+  modulosOptions, 
+  estadosOptions 
+} = useHook_General();
+```
+
+## Expected Implementation
+
+Based on the pattern from `FormularioDespacho`, the component should follow this structure:
+
+```tsx
+import { TabView, TabPanel } from "primereact/tabview";
+import { InputText } from "primereact/inputtext";
+import { InputTextarea } from "primereact/inputtextarea";
+import { Dropdown } from "primereact/dropdown";
+import { Calendar } from "primereact/calendar";
+import { Button } from "primereact/button";
+import { useState } from "react";
+import { useHook_General } from "../hooks/useHook";
+
+export const FormularioRecepcion = () => {
+  const { modulosOptions, estadosOptions } = useHook_General();
+  
+  const [formData, setFormData] = useState({
+    modulo: null,
+    economico: "",
+    estado: null,
+    observaciones: "",
+    horaRecepcion: new Date()
+  });
+
+  const handleSubmit = () => {
+    // Validate and submit form
+  };
+
+  const handleClear = () => {
+    setFormData({
+      modulo: null,
+      economico: "",
+      estado: null,
+      observaciones: "",
+      horaRecepcion: new Date()
+    });
+  };
+
+  return (
+    <TabView>
+      <TabPanel className="tabpanel" header="Recepción">
+        <div className="d-flex justify-content-center">
+          <div className="card">
+            <div className="titulo">
+              <h1>Formulario de recepción</h1>
+              <hr />
+            </div>
+
+            <div className="d-flex flex-column gap-3 mt-4 py-2 p-4">
+              {/* Modulo */}
+              <span className="p-float-label">
+                <Dropdown
+                  inputId="modulo"
+                  value={formData.modulo}
+                  onChange={(e) => setFormData({...formData, modulo: e.value})}
+                  options={modulosOptions}
+                  className="select"
+                />
+                <label htmlFor="modulo">Módulo</label>
+              </span>
+
+              {/* Economico */}
+              <span className="p-float-label">
+                <InputText
+                  id="economico"
+                  value={formData.economico}
+                  onChange={(e) => setFormData({...formData, economico: e.target.value})}
+                  className="select"
+                />
+                <label htmlFor="economico">Económico</label>
+              </span>
+
+              {/* Estado */}
+              <span className="p-float-label">
+                <Dropdown
+                  inputId="estado"
+                  value={formData.estado}
+                  onChange={(e) => setFormData({...formData, estado: e.value})}
+                  options={estadosOptions}
+                  className="select"
+                />
+                <label htmlFor="estado">Estado</label>
+              </span>
+
+              {/* Hora de Recepción */}
+              <span className="p-float-label">
+                <Calendar
+                  inputId="hora"
+                  value={formData.horaRecepcion}
+                  onChange={(e) => setFormData({...formData, horaRecepcion: e.value})}
+                  showTime
+                  hourFormat="24"
+                />
+                <label htmlFor="hora">Hora de Recepción</label>
+              </span>
+
+              {/* Observaciones */}
+              <span className="p-float-label">
+                <InputTextarea
+                  id="observaciones"
+                  value={formData.observaciones}
+                  onChange={(e) => setFormData({...formData, observaciones: e.target.value})}
+                  rows={5}
+                  className="w-100"
+                />
+                <label htmlFor="observaciones">Observaciones</label>
+              </span>
+            </div>
+
+            <div className="d-flex justify-content-center gap-3 mt-4">
+              <Button 
+                icon="pi pi-check" 
+                label="Recibir" 
+                severity="success"
+                onClick={handleSubmit}
+              />
+              <Button 
+                icon="pi pi-times" 
+                label="Limpiar" 
+                severity="danger"
+                onClick={handleClear}
+              />
+            </div>
+          </div>
+        </div>
+      </TabPanel>
+    </TabView>
+  );
+};
+```
+
+## Planned Form Fields
+
+### Módulo (Module)
+
+<ParamField path="modulo" type="dropdown">
+  Select the module receiving the vehicle or unit
+</ParamField>
+
+### Económico (Economic Number)
+
+<ParamField path="economico" type="text">
+  Vehicle identification number or economic number
+</ParamField>
+
+### Estado (Condition)
+
+<ParamField path="estado" type="dropdown">
+  Current condition of the vehicle (e.g., Good, Fair, Poor, Damaged)
+</ParamField>
+
+### Hora de Recepción (Reception Time)
+
+<ParamField path="horaRecepcion" type="datetime">
+  Date and time when the vehicle was received
+</ParamField>
+
+### Observaciones (Observations)
+
+<ParamField path="observaciones" type="textarea">
+  Additional notes or observations about the reception
+</ParamField>
+
+## Layout Recommendations
+
+### Vertical Layout
+
+Unlike `FormularioDespacho` which uses horizontal layout, the reception form should use vertical layout due to more fields:
+
+```tsx
+<div className="d-flex flex-column gap-3 mt-4 py-2 p-4">
+  {/* Form fields stacked vertically */}
+</div>
+```
+
+### Responsive Design
+
+For larger screens, consider a two-column layout:
+
+```tsx
+<div className="row">
+  <div className="col-md-6">
+    {/* Left column fields */}
+  </div>
+  <div className="col-md-6">
+    {/* Right column fields */}
+  </div>
+</div>
+```
+
+## Validation Requirements
+
+Recommended validation rules:
+
+```tsx
+const validateForm = () => {
+  const errors = [];
+  
+  if (!formData.modulo) {
+    errors.push("Módulo es requerido");
+  }
+  
+  if (!formData.economico || formData.economico.trim() === "") {
+    errors.push("Económico es requerido");
+  }
+  
+  if (!formData.estado) {
+    errors.push("Estado es requerido");
+  }
+  
+  if (!formData.horaRecepcion) {
+    errors.push("Hora de recepción es requerida");
+  }
+  
+  return errors;
+};
+```
+
+## Integration Points
+
+### Backend API
+
+Expected API endpoint:
+
+```tsx
+const submitReceptionForm = async (formData) => {
+  const response = await fetch('/api/recepcion', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(formData)
+  });
+  return response.json();
+};
+```
+
+### Navigation
+
+Accessed via the Header navigation:
+
+```tsx
+// In Header.tsx
+{
+  label: "Recepcion",
+  icon: "pi pi-fw pi-calendar",
+  command: () => navigate("/recepcion"),
+}
+```
+
+## Usage in Application
+
+The component is routed in `App.tsx`:
+
+```tsx
+import { FormularioRecepcion } from "./Recepcion/FormularioRecepcion";
+
+export const App = () => {
+  return (
+    <BrowserRouter>
+      <Header />
+      <Routes>
+        <Route path="/" element={<Sugo_main />} />
+        <Route path="/despacho" element={<FormularioDespacho />} />
+        <Route path="/recepcion" element={<FormularioRecepcion />} />
+      </Routes>
+    </BrowserRouter>
+  );
+};
+```
+
+## Development Roadmap
+
+1. **Phase 1**: Basic form structure with input fields
+2. **Phase 2**: State management and validation
+3. **Phase 3**: Backend integration
+4. **Phase 4**: Error handling and user feedback
+5. **Phase 5**: Additional features (photo upload, signature, etc.)
+
+## Related Components
+
+- [FormularioDespacho](/components/formulario-despacho) - Similar dispatch form component
+- [Header](/components/header) - Navigation to access this form
+- [Components Overview](/components/overview) - See all components
+
+## Next Steps
+
+To implement this component:
+
+1. Copy the structure from `FormularioDespacho`
+2. Add the recommended form fields
+3. Implement state management
+4. Add form validation
+5. Connect to backend API
+6. Test and refine the user experience

@@ -1,0 +1,300 @@
+---
+title: Docker Deployment
+description: Run SUGO Front in Docker containers for development and production
+---
+
+## Dockerfile Overview
+
+The project includes a lightweight Dockerfile for containerized development:
+
+```dockerfile
+FROM node:24.14.0-alpine
+WORKDIR /app
+COPY package*.json ./
+RUN npm install
+COPY . .
+EXPOSE 5173
+CMD ["npm", "run", "dev"]
+```
+
+### Dockerfile Breakdown
+
+- **Base Image**: `node:24.14.0-alpine` - Minimal Alpine Linux with Node.js 24.14.0
+- **Working Directory**: `/app` - All commands run from this directory
+- **Dependencies**: Copies `package.json` and `package-lock.json` first for layer caching
+- **Installation**: Runs `npm install` to install all dependencies
+- **Source Code**: Copies all project files into the container
+- **Port**: Exposes port `5173` for the Vite development server
+- **Command**: Starts the development server with `npm run dev`
+
+<Note>
+  This Dockerfile is optimized for development. For production, you would typically use a multi-stage build and serve static files with nginx.
+</Note>
+
+## Building the Docker Image
+
+<Steps>
+  <Step title="Build the image">
+    Build the Docker image from the project root:
+    
+    ```bash
+    docker build -t sugo-front:latest .
+    ```
+    
+    This creates an image tagged as `sugo-front:latest`.
+  </Step>
+  
+  <Step title="Verify the image">
+    Check that the image was created successfully:
+    
+    ```bash
+    docker images | grep sugo-front
+    ```
+  </Step>
+</Steps>
+
+## Running the Container
+
+### Basic Container Run
+
+```bash
+docker run -p 5173:5173 sugo-front:latest
+```
+
+### Development Mode with Volume Mounts
+
+For hot reloading during development, mount your local source code:
+
+```bash
+docker run -p 5173:5173 \
+  -v $(pwd):/app \
+  -v /app/node_modules \
+  -e CHOKIDAR_USEPOLLING=true \
+  sugo-front:latest
+```
+
+**Explanation:**
+- `-p 5173:5173`: Maps host port 5173 to container port 5173
+- `-v $(pwd):/app`: Mounts current directory to `/app` in container
+- `-v /app/node_modules`: Creates anonymous volume for node_modules (prevents overwriting)
+- `-e CHOKIDAR_USEPOLLING=true`: Enables file watching polling for Docker
+
+<Warning>
+  Always set `CHOKIDAR_USEPOLLING=true` in Docker environments. Without this, file changes may not trigger hot reloading.
+</Warning>
+
+## Docker Compose Setup
+
+For a complete development environment with both frontend and backend, use Docker Compose:
+
+```yaml docker-compose.yml
+services:
+  sugo-back:
+    build:
+      context: ./SUGO-BACK
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./SUGO-BACK:/app
+      - /app/node_modules
+    environment:
+      - NODE_ENV=development
+
+  sugo-front:
+    build:
+      context: ./SUGO-FRONT
+      dockerfile: Dockerfile
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./SUGO-FRONT:/app
+      - /app/node_modules
+    environment:
+      - CHOKIDAR_USEPOLLING=true
+    depends_on:
+      - sugo-back
+```
+
+### Docker Compose Commands
+
+<Steps>
+  <Step title="Start services">
+    Start all services in the background:
+    
+    ```bash
+    docker-compose up -d
+    ```
+  </Step>
+  
+  <Step title="View logs">
+    Monitor logs from all services:
+    
+    ```bash
+    docker-compose logs -f
+    ```
+    
+    Or for a specific service:
+    
+    ```bash
+    docker-compose logs -f sugo-front
+    ```
+  </Step>
+  
+  <Step title="Stop services">
+    Stop all running services:
+    
+    ```bash
+    docker-compose down
+    ```
+  </Step>
+</Steps>
+
+## Port Mappings
+
+### Frontend (SUGO Front)
+
+- **Host Port**: 5173
+- **Container Port**: 5173
+- **Access**: `http://localhost:5173`
+
+### Backend (SUGO Back)
+
+- **Host Port**: 3000
+- **Container Port**: 3000
+- **Access**: `http://localhost:3000`
+
+## Volume Mounts
+
+### Source Code Volume
+
+```bash
+-v ./SUGO-FRONT:/app
+```
+
+Mounts your local source code into the container. Changes to files are immediately reflected inside the container.
+
+### Node Modules Volume
+
+```bash
+-v /app/node_modules
+```
+
+Creates an anonymous volume for `node_modules`. This prevents your local `node_modules` from overwriting the container's dependencies, which may be different due to platform-specific binaries.
+
+## Environment Variables
+
+### CHOKIDAR_USEPOLLING
+
+```bash
+CHOKIDAR_USEPOLLING=true
+```
+
+**Purpose**: Enables polling-based file watching instead of native filesystem events.
+
+**Why it's needed**: Docker on Mac and Windows doesn't always propagate filesystem events from the host to containers. Polling ensures that file changes are detected.
+
+**Impact**: Slightly higher CPU usage, but necessary for hot reloading in Docker.
+
+<Warning>
+  Without `CHOKIDAR_USEPOLLING=true`, hot module replacement (HMR) will not work correctly in Docker, and you'll need to manually restart the server after code changes.
+</Warning>
+
+### NODE_ENV
+
+```bash
+NODE_ENV=development
+```
+
+Sets the Node.js environment to development mode, which enables additional debugging and development features.
+
+## Production Deployment
+
+For production deployment, consider the following changes:
+
+### Multi-stage Dockerfile
+
+```dockerfile
+# Build stage
+FROM node:24.14.0-alpine AS builder
+WORKDIR /app
+COPY package*.json ./
+RUN npm ci --only=production
+COPY . .
+RUN npm run build
+
+# Production stage
+FROM nginx:alpine
+COPY --from=builder /app/dist /usr/share/nginx/html
+EXPOSE 80
+CMD ["nginx", "-g", "daemon off;"]
+```
+
+**Benefits:**
+- Smaller final image (only contains static files and nginx)
+- No Node.js runtime in production
+- Better security and performance
+
+### Production Docker Compose
+
+```yaml
+services:
+  sugo-front:
+    build:
+      context: ./SUGO-FRONT
+      dockerfile: Dockerfile.prod
+    ports:
+      - "80:80"
+    restart: unless-stopped
+```
+
+## Troubleshooting
+
+### Hot Reloading Not Working
+
+**Solution**: Ensure `CHOKIDAR_USEPOLLING=true` is set and the Vite config has `usePolling: true`:
+
+```typescript vite.config.ts
+server: {
+  host: true,
+  port: 5173,
+  watch: {
+    usePolling: true,
+  },
+}
+```
+
+### Permission Errors
+
+**Solution**: If you encounter permission errors with mounted volumes, ensure your user has the correct permissions:
+
+```bash
+# Linux/Mac
+sudo chown -R $USER:$USER .
+```
+
+### Port Already in Use
+
+**Solution**: Stop other services using port 5173 or change the port mapping:
+
+```bash
+# Use a different host port
+docker run -p 8080:5173 sugo-front:latest
+```
+
+### Container Exits Immediately
+
+**Solution**: Check logs to diagnose the issue:
+
+```bash
+docker logs <container-id>
+```
+
+Common causes:
+- Missing dependencies (run `npm install` in the Dockerfile)
+- Syntax errors in code
+- Port conflicts
+
+<Tip>
+  Use `docker-compose logs -f` to monitor logs in real-time and catch errors as they happen.
+</Tip>

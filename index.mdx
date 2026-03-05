@@ -1,97 +1,113 @@
 ---
-title: "Introduction"
-description: "Welcome to the new home for your documentation"
+title: "Welcome to SUGO Front"
+description: "React-based frontend application for managing dispatch and reception workflows"
 ---
 
-## Setting up
+<div style={{
+  background: 'linear-gradient(135deg, #f1d262 0%, #7c6c34 100%)',
+  borderRadius: '20px',
+  padding: '3rem 2rem',
+  marginBottom: '2rem',
+  textAlign: 'center'
+}}>
+  <h1 style={{ 
+    fontSize: '3rem', 
+    fontWeight: '700', 
+    color: '#19160b',
+    marginBottom: '1rem'
+  }}>
+    SUGO Front
+  </h1>
+  <p style={{ 
+    fontSize: '1.25rem', 
+    color: '#2e2e2e',
+    maxWidth: '600px',
+    margin: '0 auto'
+  }}>
+    Modern React application for streamlined dispatch and reception management
+  </p>
+</div>
 
-Get your documentation site up and running in minutes.
+## Get Started
 
-<Card
-  title="Start here"
-  icon="rocket"
-  href="/quickstart"
-  horizontal
->
-  Follow our three step quickstart guide.
-</Card>
+Start building with SUGO Front in minutes.
 
-## Make it yours
-
-Design a docs site that looks great and empowers your users.
-
-<Columns cols={2}>
+<CardGroup cols={2}>
   <Card
-    title="Edit locally"
-    icon="pen-to-square"
-    href="/development"
+    title="Quickstart"
+    icon="rocket"
+    href="/quickstart"
   >
-    Edit your docs locally and preview them in real time.
+    Get up and running with SUGO Front in under 5 minutes
   </Card>
   <Card
-    title="Customize your site"
+    title="Installation"
+    icon="download"
+    href="/installation"
+  >
+    Complete installation and setup instructions
+  </Card>
+</CardGroup>
+
+## Core Features
+
+SUGO Front provides a comprehensive solution for managing workflows.
+
+<CardGroup cols={2}>
+  <Card
+    title="Dispatch Management"
+    icon="truck"
+    href="/components/formulario-despacho"
+  >
+    Streamlined forms for dispatch operations with module selection and validation
+  </Card>
+  <Card
+    title="Reception Workflows"
+    icon="box"
+    href="/components/formulario-recepcion"
+  >
+    Efficient reception form management and tracking
+  </Card>
+  <Card
+    title="PrimeReact Components"
     icon="palette"
-    href="/essentials/settings"
+    href="/styling/primereact"
   >
-    Customize the design and colors of your site to match your brand.
+    Beautiful UI with enterprise-grade PrimeReact component library
   </Card>
-    <Card
-    title="Set up navigation"
+  <Card
+    title="Docker Ready"
+    icon="docker"
+    href="/development/docker"
+  >
+    Containerized deployment for easy scaling and consistency
+  </Card>
+</CardGroup>
+
+## Explore the Architecture
+
+Learn how SUGO Front is structured and built.
+
+<CardGroup cols={3}>
+  <Card
+    title="Project Structure"
+    icon="folder-tree"
+    href="/architecture/project-structure"
+  >
+    Understand the codebase organization
+  </Card>
+  <Card
+    title="Routing"
     icon="map"
-    href="/essentials/navigation"
+    href="/architecture/routing"
   >
-    Organize your docs to help users find what they need and succeed with your product.
+    Learn about navigation and route configuration
   </Card>
   <Card
-    title="API documentation"
-    icon="terminal"
-    href="/api-reference/introduction"
+    title="Components"
+    icon="cubes"
+    href="/components/overview"
   >
-    Auto-generate API documentation from OpenAPI specifications.
+    Explore the component architecture
   </Card>
-</Columns>
-
-## Create beautiful pages
-
-Everything you need to create world-class documentation.
-
-<Columns cols={2}>
-  <Card
-    title="Write with MDX"
-    icon="pen-fancy"
-    href="/essentials/markdown"
-  >
-    Use MDX to style your docs pages.
-  </Card>
-  <Card
-    title="Code samples"
-    icon="code"
-    href="/essentials/code"
-  >
-    Add sample code to demonstrate how to use your product.
-  </Card>
-  <Card
-    title="Images"
-    icon="image"
-    href="/essentials/images"
-  >
-    Display images and other media.
-  </Card>
-  <Card
-    title="Reusable snippets"
-    icon="recycle"
-    href="/essentials/reusable-snippets"
-  >
-    Write once and reuse across your docs.
-  </Card>
-</Columns>
-
-## Need inspiration?
-
-<Card
-  title="See complete examples"
-  icon="stars"
-  href="https://mintlify.com/customers"
->
-  Browse our showcase of exceptional documentation sites.
-</Card>
+</CardGroup>

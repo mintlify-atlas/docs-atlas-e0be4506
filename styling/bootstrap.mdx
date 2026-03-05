@@ -1,0 +1,389 @@
+---
+title: 'Bootstrap Integration'
+description: 'Bootstrap setup, utilities, grid system, and integration with PrimeReact components'
+---
+
+## Bootstrap Setup
+
+SUGO Front integrates Bootstrap for layout utilities and responsive design. Bootstrap is imported first in the styling cascade:
+
+```tsx src/main.tsx
+import "bootstrap/dist/css/bootstrap.min.css";
+import "bootstrap-icons/font/bootstrap-icons.css";
+```
+
+### Version Information
+
+From `package.json`:
+
+```json package.json
+{
+  "bootstrap": "^5.3.8",
+  "bootstrap-icons": "^1.13.1"
+}
+```
+
+<Info>
+SUGO Front uses **Bootstrap 5.3.8**, which includes modern utility classes and improved flexbox support.
+</Info>
+
+## Bootstrap Utilities Usage
+
+Bootstrap utilities are extensively used throughout the application for layout and spacing:
+
+### Flexbox Utilities
+
+The most commonly used Bootstrap utility in SUGO Front is the flexbox system:
+
+<CodeGroup>
+```tsx Centering Content
+import { Card } from "primereact/card";
+
+<div className="d-flex justify-content-center">
+  <div className="card">
+    {/* Content */}
+  </div>
+</div>
+```
+
+```tsx src/Despacho/FormularioDespacho.tsx
+<TabPanel className="tabpanel" header="Despacho">
+  <div className="d-flex justify-content-center">
+    <div className="card">
+      <div className="titulo">
+        <h1>Formulario de despacho</h1>
+        <hr />
+      </div>
+      {/* Form fields */}
+    </div>
+  </div>
+</TabPanel>
+```
+</CodeGroup>
+
+### Complex Flex Layouts
+
+Combining multiple Bootstrap utilities for advanced layouts:
+
+```tsx src/Despacho/FormularioDespacho.tsx
+<div className="d-flex flex-row gap-3 mt-4 py-2 p-4 d-flex justify-content-center">
+  {/* modulo */}
+  <span className="p-float-label">
+    <Dropdown
+      inputId="dd-city"
+      value={selectModulo}
+      onChange={(e) => setSelectModulo(e.value)}
+      options={modulosOptions}
+      className="select"
+    />
+    <label htmlFor="dd-city">Modulo</label>
+  </span>
+
+  {/* economico */}
+  <span className="p-float-label">
+    <InputText className="select" />
+    <label htmlFor="username">Economico</label>
+  </span>
+
+  {/* motivos */}
+  <span className="p-float-label">
+    <Dropdown
+      className="select"
+      inputId="dd-city"
+      value={selectModulo}
+      onChange={(e) => setSelectModulo(e.value)}
+      options={modulosOptions}
+    />
+    <label htmlFor="dd-city">Motivos</label>
+  </span>
+</div>
+```
+
+### Button Groups
+
+```tsx src/Despacho/FormularioDespacho.tsx
+<div className="d-flex justify-content-center gap-3 mt-4">
+  <Button icon="pi pi-check" label="Enviar" severity="success" />
+  <Button icon="pi pi-times" label="Limpiar" severity="danger" />
+</div>
+```
+
+## Bootstrap Utility Classes Reference
+
+### Layout Classes Used
+
+<Tabs>
+  <Tab title="Flexbox">
+    | Class | Purpose | Example |
+    |-------|---------|----------|
+    | `d-flex` | Enable flexbox | `<div className="d-flex">` |
+    | `flex-row` | Flex direction row | `<div className="d-flex flex-row">` |
+    | `justify-content-center` | Center items horizontally | `<div className="d-flex justify-content-center">` |
+  </Tab>
+  
+  <Tab title="Spacing">
+    | Class | Purpose | Example |
+    |-------|---------|----------|
+    | `gap-3` | Gap between flex items (1rem) | `<div className="d-flex gap-3">` |
+    | `mt-4` | Margin top (1.5rem) | `<div className="mt-4">` |
+    | `py-2` | Padding top & bottom (0.5rem) | `<div className="py-2">` |
+    | `p-4` | Padding all sides (1.5rem) | `<div className="p-4">` |
+  </Tab>
+</Tabs>
+
+<Note>
+Bootstrap 5 uses a spacing scale where each number represents a multiple of the base spacing unit (0.25rem):
+- `1` = 0.25rem
+- `2` = 0.5rem
+- `3` = 1rem
+- `4` = 1.5rem
+- `5` = 3rem
+</Note>
+
+## Bootstrap Icons
+
+While PrimeIcons are primarily used, Bootstrap Icons are available as an alternative:
+
+```tsx
+import "bootstrap-icons/font/bootstrap-icons.css";
+
+// Usage example
+<i className="bi bi-house"></i>
+<i className="bi bi-person"></i>
+<i className="bi bi-box-arrow-right"></i>
+```
+
+### Bootstrap Icons vs PrimeIcons
+
+<Tabs>
+  <Tab title="PrimeIcons (Primary)">
+    ```tsx
+    <i className="pi pi-home"></i>
+    <i className="pi pi-user"></i>
+    <i className="pi pi-sign-out"></i>
+    ```
+    
+    **Used for:** UI components, buttons, navigation
+  </Tab>
+  
+  <Tab title="Bootstrap Icons (Available)">
+    ```tsx
+    <i className="bi bi-house"></i>
+    <i className="bi bi-person"></i>
+    <i className="bi bi-box-arrow-right"></i>
+    ```
+    
+    **Can be used for:** Content icons, custom components
+  </Tab>
+</Tabs>
+
+## Grid System Usage
+
+While SUGO Front primarily uses flexbox utilities, Bootstrap's 12-column grid system is available:
+
+### Basic Grid Example
+
+```tsx
+<div className="container">
+  <div className="row">
+    <div className="col-md-6">
+      {/* Left column */}
+    </div>
+    <div className="col-md-6">
+      {/* Right column */}
+    </div>
+  </div>
+</div>
+```
+
+### Grid with PrimeReact Components
+
+```tsx
+<div className="container">
+  <div className="row g-3">
+    <div className="col-md-4">
+      <Dropdown options={options1} className="w-100" />
+    </div>
+    <div className="col-md-4">
+      <InputText className="w-100" />
+    </div>
+    <div className="col-md-4">
+      <Button label="Submit" className="w-100" />
+    </div>
+  </div>
+</div>
+```
+
+## Responsive Utilities
+
+Bootstrap's responsive utilities can be used for mobile-first design:
+
+<CodeGroup>
+```tsx Responsive Flexbox
+<div className="d-flex flex-column flex-md-row justify-content-center gap-3">
+  <Dropdown className="select" />
+  <InputText className="select" />
+  <Dropdown className="select" />
+</div>
+```
+
+```tsx Responsive Visibility
+<div className="d-none d-md-block">
+  {/* Only visible on medium screens and up */}
+</div>
+
+<div className="d-block d-md-none">
+  {/* Only visible on small screens */}
+</div>
+```
+</CodeGroup>
+
+### Responsive Breakpoints
+
+| Breakpoint | Class Infix | Dimensions |
+|------------|-------------|------------|
+| Extra small | *None* | &lt;576px |
+| Small | `sm` | ≥576px |
+| Medium | `md` | ≥768px |
+| Large | `lg` | ≥992px |
+| Extra large | `xl` | ≥1200px |
+| Extra extra large | `xxl` | ≥1400px |
+
+## Integration with PrimeReact
+
+Bootstrap and PrimeReact work seamlessly together in SUGO Front:
+
+### Layout + Components Pattern
+
+```tsx src/Despacho/FormularioDespacho.tsx
+import { TabView, TabPanel } from "primereact/tabview";
+import { Card } from "primereact/card";
+import { InputText } from "primereact/inputtext";
+import { Dropdown } from "primereact/dropdown";
+import { Button } from "primereact/button";
+
+// Bootstrap for layout, PrimeReact for components
+<TabView>
+  <TabPanel header="Despacho">
+    <div className="d-flex justify-content-center"> {/* Bootstrap */}
+      <div className="card"> {/* Custom class */}
+        <div className="d-flex flex-row gap-3 mt-4 py-2 p-4"> {/* Bootstrap */}
+          <Dropdown /> {/* PrimeReact */}
+          <InputText /> {/* PrimeReact */}
+        </div>
+        
+        <div className="d-flex justify-content-center gap-3 mt-4"> {/* Bootstrap */}
+          <Button severity="success" /> {/* PrimeReact */}
+          <Button severity="danger" /> {/* PrimeReact */}
+        </div>
+      </div>
+    </div>
+  </TabPanel>
+</TabView>
+```
+
+<Note>
+**Best Practice:** Use Bootstrap for layout/spacing and PrimeReact for interactive components.
+</Note>
+
+## Common Patterns
+
+### Centered Form Pattern
+
+```tsx
+<div className="d-flex justify-content-center">
+  <div className="card">
+    <div className="d-flex flex-row gap-3 p-4">
+      {/* Form fields */}
+    </div>
+  </div>
+</div>
+```
+
+### Button Group Pattern
+
+```tsx
+<div className="d-flex justify-content-center gap-3 mt-4">
+  <Button icon="pi pi-check" label="Submit" severity="success" />
+  <Button icon="pi pi-times" label="Cancel" severity="danger" />
+</div>
+```
+
+### Responsive Form Layout
+
+```tsx
+<div className="d-flex flex-column flex-md-row gap-3 mt-4 p-4 justify-content-center">
+  <span className="p-float-label">
+    <Dropdown className="select" />
+    <label>Field 1</label>
+  </span>
+  
+  <span className="p-float-label">
+    <InputText className="select" />
+    <label>Field 2</label>
+  </span>
+  
+  <span className="p-float-label">
+    <Dropdown className="select" />
+    <label>Field 3</label>
+  </span>
+</div>
+```
+
+## Styling Precedence
+
+With both Bootstrap and PrimeReact loaded, the import order determines precedence:
+
+```tsx src/main.tsx
+// 1. Bootstrap (base styles)
+import "bootstrap/dist/css/bootstrap.min.css";
+import "bootstrap-icons/font/bootstrap-icons.css";
+
+// 2. PrimeReact (component styles)
+import "primereact/resources/themes/saga-blue/theme.css";
+import "primereact/resources/primereact.min.css";
+import "primeicons/primeicons.css";
+
+// 3. Custom styles (overrides)
+import "./App.css";
+```
+
+<Warning>
+If Bootstrap and PrimeReact styles conflict, PrimeReact styles will take precedence due to import order. Use `App.css` with `!important` if needed to override both.
+</Warning>
+
+## Best Practices
+
+<Steps>
+  <Step title="Use Bootstrap for structure">
+    Leverage Bootstrap flexbox utilities (`d-flex`, `justify-content-*`, `align-items-*`) for layout structure.
+  </Step>
+  
+  <Step title="Apply Bootstrap spacing consistently">
+    Use Bootstrap's spacing scale (`gap-*`, `m*-*`, `p*-*`) for consistent margins and padding.
+  </Step>
+  
+  <Step title="Combine with PrimeReact components">
+    Wrap PrimeReact components in Bootstrap layout utilities for responsive designs.
+  </Step>
+  
+  <Step title="Minimize custom CSS">
+    Prefer Bootstrap utilities over custom CSS when possible to reduce CSS bloat.
+  </Step>
+  
+  <Step title="Use responsive classes">
+    Apply responsive breakpoint classes (`d-md-flex`, `col-lg-6`) for mobile-first design.
+  </Step>
+</Steps>
+
+## Related Resources
+
+<CardGroup cols={2}>
+  <Card title="Theme Architecture" icon="palette" href="/styling/theme">
+    Understand the overall styling system
+  </Card>
+  
+  <Card title="PrimeReact Styling" icon="react" href="/styling/primereact">
+    Learn about PrimeReact component customization
+  </Card>
+</CardGroup>

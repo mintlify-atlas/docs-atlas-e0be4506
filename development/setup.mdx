@@ -1,0 +1,129 @@
+---
+title: Development Setup
+description: Set up your local development environment for SUGO Front
+---
+
+## Prerequisites
+
+Before you begin, ensure you have the following installed:
+
+- **Node.js**: Version 24.14.0 or compatible (the project uses Node 24.14.0-alpine in Docker)
+- **npm**: Comes with Node.js
+- **Git**: For cloning the repository
+
+## IDE Recommendations
+
+We recommend using:
+
+- **Visual Studio Code** with the following extensions:
+  - ESLint
+  - TypeScript and JavaScript Language Features
+  - Prettier (optional)
+  - React Developer Tools
+
+## Getting Started
+
+<Steps>
+  <Step title="Clone the repository">
+    Clone the SUGO Front repository to your local machine:
+    
+    ```bash
+    git clone <repository-url>
+    cd sugo-front
+    ```
+  </Step>
+
+  <Step title="Install dependencies">
+    Install project dependencies using your preferred package manager:
+    
+    <CodeGroup>
+      ```bash npm
+      npm install
+      ```
+      
+      ```bash yarn
+      yarn install
+      ```
+      
+      ```bash pnpm
+      pnpm install
+      ```
+    </CodeGroup>
+    
+    <Note>
+      The project has a `preinstall` script that runs automatically via `preinstall.js` to ensure proper setup.
+    </Note>
+  </Step>
+
+  <Step title="Environment configuration">
+    The project uses Vite with the following default configuration:
+    
+    - **Port**: 5173
+    - **Host**: All interfaces (0.0.0.0)
+    - **Hot Module Replacement (HMR)**: Enabled with polling
+    
+    For Docker environments, you may need to set:
+    
+    ```bash
+    export CHOKIDAR_USEPOLLING=true
+    ```
+  </Step>
+
+  <Step title="Start development server">
+    Run the development server:
+    
+    ```bash
+    npm run dev
+    ```
+    
+    The application will be available at `http://localhost:5173`
+  </Step>
+</Steps>
+
+## Development Workflow
+
+### TypeScript Configuration
+
+The project uses TypeScript with strict mode enabled and includes two configurations:
+
+- **tsconfig.app.json**: For application code in `src/`
+  - Target: ES2022
+  - JSX: react-jsx
+  - Strict linting rules enabled
+  
+- **tsconfig.node.json**: For Node.js files (like `vite.config.ts`)
+  - Target: ES2023
+  - Node types included
+
+### Code Quality
+
+The project enforces code quality through:
+
+- **ESLint**: Configured with React Hooks and React Refresh plugins
+- **TypeScript**: Strict mode with comprehensive linting options
+- Unused locals and parameters detection
+- No fallthrough cases in switch statements
+
+### Project Structure
+
+```
+sugo-front/
+├── src/              # Application source code
+├── dist/             # Build output (ignored by ESLint)
+├── node_modules/     # Dependencies
+├── public/           # Static assets
+├── vite.config.ts    # Vite configuration
+├── tsconfig.json     # TypeScript project references
+├── tsconfig.app.json # App TypeScript config
+├── tsconfig.node.json# Node TypeScript config
+├── eslint.config.js  # ESLint configuration
+└── package.json      # Project dependencies and scripts
+```
+
+## Next Steps
+
+Now that your development environment is set up:
+
+- Learn about [building and scripts](/development/building)
+- Explore [Docker deployment](/development/docker)
+- Explore the [components](/components/overview) and [hooks](/hooks/overview)

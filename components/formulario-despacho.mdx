@@ -1,0 +1,480 @@
+---
+title: FormularioDespacho Component
+description: Dispatch form component with validation and state management
+---
+
+## Overview
+
+The `FormularioDespacho` component provides a form interface for dispatching vehicles or units. It uses PrimeReact components for form inputs and includes state management for handling user selections.
+
+**Location**: `src/Despacho/FormularioDespacho.tsx`
+
+## Features
+
+- Tabbed interface using PrimeReact TabView
+- Form fields with floating labels
+- Dropdown selections for modules and motives
+- Text input for economic number
+- Action buttons (Submit and Clear)
+- Custom hook integration for data options
+- Responsive layout with Bootstrap utilities
+
+## Full Implementation
+
+```tsx
+import { TabView, TabPanel } from "primereact/tabview";
+import { Card } from "primereact/card";
+import { InputText } from "primereact/inputtext";
+import { Dropdown } from "primereact/dropdown";
+import { Button } from "primereact/button";
+import { useState } from "react";
+// hooks personalizados
+import { useHook_General } from "../hooks/useHook";
+
+export const FormularioDespacho = () => {
+  const { modulosOptions } = useHook_General();
+
+  const [selectModulo, setSelectModulo] = useState(null);
+
+  return (
+    <>
+      <TabView>
+        <TabPanel className="tabpanel" header="Despacho">
+          <div className="d-flex justify-content-center">
+            <div className="card">
+              <div className="titulo">
+                <h1>Formulario de despacho</h1>
+                <hr />
+              </div>
+
+              <div className="d-flex flex-row gap-3 mt-4 py-2 p-4 d-flex justify-content-center">
+                {/* modulo */}
+                <span className="p-float-label">
+                  <Dropdown
+                    inputId="dd-city"
+                    value={selectModulo}
+                    onChange={(e) => setSelectModulo(e.value)}
+                    options={modulosOptions}
+                    className="select"
+                  />
+                  <label htmlFor="dd-city">Modulo</label>
+                </span>
+
+                {/* economico */}
+                <span className="p-float-label">
+                  <InputText className="select" />
+                  <label htmlFor="username">Economico</label>
+                </span>
+
+                {/* motivos */}
+                <span className="p-float-label">
+                  <Dropdown
+                    className="select"
+                    inputId="dd-city"
+                    value={selectModulo}
+                    onChange={(e) => setSelectModulo(e.value)}
+                    options={modulosOptions}
+                  />
+                  <label htmlFor="dd-city">Motivos</label>
+                </span>
+              </div>
+
+              <div className="d-flex justify-content-center gap-3 mt-4">
+                <Button icon="pi pi-check" label="Enviar" severity="success" />
+                <Button icon="pi pi-times" label="Limpiar" severity="danger" />
+              </div>
+            </div>
+          </div>
+        </TabPanel>
+      </TabView>
+    </>
+  );
+};
+```
+
+## Form Fields
+
+The form contains three main input fields:
+
+### 1. Modulo (Module)
+
+<ParamField path="value" type="any">
+  Current selected module value from state
+</ParamField>
+
+<ParamField path="onChange" type="function">
+  Updates `selectModulo` state when selection changes
+</ParamField>
+
+<ParamField path="options" type="array">
+  Module options provided by `useHook_General()` hook
+</ParamField>
+
+```tsx
+<span className="p-float-label">
+  <Dropdown
+    inputId="dd-city"
+    value={selectModulo}
+    onChange={(e) => setSelectModulo(e.value)}
+    options={modulosOptions}
+    className="select"
+  />
+  <label htmlFor="dd-city">Modulo</label>
+</span>
+```
+
+### 2. Economico (Economic Number)
+
+<ParamField path="type" type="string">
+  Text input for entering vehicle economic number
+</ParamField>
+
+<ParamField path="className" type="string">
+  Custom CSS class: `select`
+</ParamField>
+
+```tsx
+<span className="p-float-label">
+  <InputText className="select" />
+  <label htmlFor="username">Economico</label>
+</span>
+```
+
+<Note>
+The Economico field currently has no state binding. You should add state management:
+
+```tsx
+const [economico, setEconomico] = useState("");
+
+<InputText 
+  value={economico}
+  onChange={(e) => setEconomico(e.target.value)}
+  className="select" 
+/>
+```
+</Note>
+
+### 3. Motivos (Reasons)
+
+<ParamField path="value" type="any">
+  Current selected reason (currently shares state with Modulo)
+</ParamField>
+
+<ParamField path="onChange" type="function">
+  Updates selection state
+</ParamField>
+
+<ParamField path="options" type="array">
+  Reason options (currently using `modulosOptions`)
+</ParamField>
+
+```tsx
+<span className="p-float-label">
+  <Dropdown
+    className="select"
+    inputId="dd-city"
+    value={selectModulo}
+    onChange={(e) => setSelectModulo(e.value)}
+    options={modulosOptions}
+  />
+  <label htmlFor="dd-city">Motivos</label>
+</span>
+```
+
+<Note>
+The Motivos field currently shares state with Modulo. You should create separate state:
+
+```tsx
+const [selectMotivo, setSelectMotivo] = useState(null);
+const { motivosOptions } = useHook_General();
+
+<Dropdown
+  value={selectMotivo}
+  onChange={(e) => setSelectMotivo(e.value)}
+  options={motivosOptions}
+  // ... other props
+/>
+```
+</Note>
+
+## PrimeReact Components Used
+
+### TabView & TabPanel
+
+```tsx
+<TabView>
+  <TabPanel className="tabpanel" header="Despacho">
+    {/* Form content */}
+  </TabPanel>
+</TabView>
+```
+
+<ParamField path="header" type="string">
+  Tab label displayed in the tab header: "Despacho"
+</ParamField>
+
+<ParamField path="className" type="string">
+  Custom CSS class for styling: `tabpanel`
+</ParamField>
+
+Provides a tabbed interface. Additional tabs can be added for different dispatch types.
+
+### Dropdown
+
+```tsx
+<Dropdown
+  inputId="dd-city"
+  value={selectModulo}
+  onChange={(e) => setSelectModulo(e.value)}
+  options={modulosOptions}
+  className="select"
+/>
+```
+
+<ParamField path="inputId" type="string">
+  HTML id for the input element
+</ParamField>
+
+<ParamField path="value" type="any">
+  Currently selected value
+</ParamField>
+
+<ParamField path="onChange" type="function">
+  Callback function when selection changes
+</ParamField>
+
+<ParamField path="options" type="array">
+  Array of options to display in dropdown
+</ParamField>
+
+### InputText
+
+```tsx
+<InputText className="select" />
+```
+
+<ParamField path="className" type="string">
+  Custom CSS class for styling
+</ParamField>
+
+Standard text input field with PrimeReact styling.
+
+### Button
+
+```tsx
+<Button icon="pi pi-check" label="Enviar" severity="success" />
+<Button icon="pi pi-times" label="Limpiar" severity="danger" />
+```
+
+<ParamField path="icon" type="string">
+  PrimeIcons class for button icon
+</ParamField>
+
+<ParamField path="label" type="string">
+  Button text label
+</ParamField>
+
+<ParamField path="severity" type="string">
+  Button color theme: "success" (green) or "danger" (red)
+</ParamField>
+
+## State Management
+
+### Current State
+
+```tsx
+const [selectModulo, setSelectModulo] = useState(null);
+```
+
+Currently only one state variable for the Modulo dropdown.
+
+### Recommended State Structure
+
+```tsx
+const [formData, setFormData] = useState({
+  modulo: null,
+  economico: "",
+  motivo: null
+});
+
+const handleChange = (field, value) => {
+  setFormData(prev => ({
+    ...prev,
+    [field]: value
+  }));
+};
+```
+
+## Custom Hooks
+
+### useHook_General
+
+```tsx
+import { useHook_General } from "../hooks/useHook";
+const { modulosOptions } = useHook_General();
+```
+
+Provides dropdown options for the form. The hook should return:
+
+```tsx
+{
+  modulosOptions: [
+    { label: "Module 1", value: "mod1" },
+    { label: "Module 2", value: "mod2" },
+    // ...
+  ]
+}
+```
+
+## Form Validation
+
+The component currently has no validation. Recommended validation:
+
+```tsx
+const validateForm = () => {
+  if (!formData.modulo) {
+    // Show error: Module is required
+    return false;
+  }
+  if (!formData.economico || formData.economico.trim() === "") {
+    // Show error: Economic number is required
+    return false;
+  }
+  if (!formData.motivo) {
+    // Show error: Reason is required
+    return false;
+  }
+  return true;
+};
+
+const handleSubmit = () => {
+  if (validateForm()) {
+    // Submit form data
+  }
+};
+```
+
+## Action Buttons
+
+### Enviar (Submit) Button
+
+```tsx
+<Button 
+  icon="pi pi-check" 
+  label="Enviar" 
+  severity="success"
+  onClick={handleSubmit}
+/>
+```
+
+Should submit the form data to the backend.
+
+### Limpiar (Clear) Button
+
+```tsx
+<Button 
+  icon="pi pi-times" 
+  label="Limpiar" 
+  severity="danger"
+  onClick={handleClear}
+/>
+```
+
+Should reset all form fields:
+
+```tsx
+const handleClear = () => {
+  setFormData({
+    modulo: null,
+    economico: "",
+    motivo: null
+  });
+};
+```
+
+## Layout and Styling
+
+### Container Layout
+
+```tsx
+<div className="d-flex flex-row gap-3 mt-4 py-2 p-4 d-flex justify-content-center">
+```
+
+- `d-flex flex-row`: Horizontal flexbox layout
+- `gap-3`: Gap between form fields
+- `mt-4`: Top margin
+- `py-2 p-4`: Padding
+- `justify-content-center`: Center alignment
+
+### Floating Labels
+
+All inputs use PrimeReact's floating label pattern:
+
+```tsx
+<span className="p-float-label">
+  <InputComponent />
+  <label htmlFor="input-id">Label Text</label>
+</span>
+```
+
+Labels float above the input when focused or filled.
+
+## Usage Example
+
+Complete example with state and handlers:
+
+```tsx
+export const FormularioDespacho = () => {
+  const { modulosOptions, motivosOptions } = useHook_General();
+  
+  const [formData, setFormData] = useState({
+    modulo: null,
+    economico: "",
+    motivo: null
+  });
+
+  const handleSubmit = async () => {
+    if (!validateForm()) return;
+    
+    try {
+      await submitDispatchForm(formData);
+      // Show success message
+      handleClear();
+    } catch (error) {
+      // Show error message
+    }
+  };
+
+  const handleClear = () => {
+    setFormData({
+      modulo: null,
+      economico: "",
+      motivo: null
+    });
+  };
+
+  return (
+    // ... component JSX
+  );
+};
+```
+
+## Accessibility
+
+- Uses semantic HTML labels
+- Floating labels provide context
+- Form fields have proper `htmlFor` associations
+- Buttons have descriptive labels and icons
+
+<Note>
+Improve accessibility by adding:
+- Required field indicators
+- Error messages with ARIA attributes
+- Form validation feedback
+</Note>
+
+## Related Components
+
+- [Header](/components/header) - Navigation to access this form
+- [FormularioRecepcion](/components/formulario-recepcion) - Related reception form
+- [Components Overview](/components/overview) - See all components

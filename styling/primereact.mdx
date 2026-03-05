@@ -1,0 +1,370 @@
+---
+title: 'PrimeReact Styling'
+description: 'PrimeReact theme setup, component customization, and styling examples'
+---
+
+## PrimeReact Theme Setup
+
+SUGO Front uses the **Saga Blue** theme from PrimeReact, configured in `main.tsx`:
+
+```tsx src/main.tsx
+import "primereact/resources/themes/saga-blue/theme.css";
+import "primereact/resources/primereact.min.css";
+import "primeicons/primeicons.css";
+```
+
+### Version Information
+
+From `package.json`:
+
+```json
+{
+  "primereact": "^10.9.7",
+  "primeicons": "^7.0.0"
+}
+```
+
+## Available PrimeReact Components
+
+SUGO Front leverages several PrimeReact components:
+
+<CardGroup cols={3}>
+  <Card title="Menubar" icon="bars">
+    Navigation menu component with routing integration
+  </Card>
+  
+  <Card title="TabView & TabPanel" icon="folder-open">
+    Tabbed interface for organizing content
+  </Card>
+  
+  <Card title="Card" icon="square">
+    Container component for content grouping
+  </Card>
+  
+  <Card title="InputText" icon="keyboard">
+    Text input with floating labels
+  </Card>
+  
+  <Card title="Dropdown" icon="caret-down">
+    Select dropdown with custom options
+  </Card>
+  
+  <Card title="Button" icon="circle">
+    Action buttons with icons and severity levels
+  </Card>
+  
+  <Card title="Tooltip" icon="comment">
+    Contextual tooltips for UI elements
+  </Card>
+</CardGroup>
+
+## Component Examples
+
+### Menubar with Custom Styling
+
+<CodeGroup>
+```tsx src/components/Header.tsx
+import { Menubar } from "primereact/menubar";
+import { useNavigate } from "react-router-dom";
+
+export const Header = () => {
+  const navigate = useNavigate();
+
+  const items = [
+    {
+      label: "Despacho",
+      icon: "pi pi-fw pi-home",
+      command: () => navigate("/despacho"),
+    },
+    {
+      label: "Recepcion",
+      icon: "pi pi-fw pi-calendar",
+      command: () => navigate("/recepcion"),
+    },
+  ];
+
+  const end = (
+    <div style={{ display: "flex", alignItems: "center", gap: "1.5rem" }}>
+      <i className="pi pi-user" style={{ fontSize: "1.1rem" }}></i>
+    </div>
+  );
+
+  return <Menubar model={items} className="menuBar" end={end} />;
+};
+```
+
+```css App.css
+.menuBar {
+  margin: 0.8rem;
+  box-shadow: 0.5rem 0.5rem 1rem rgba(129, 128, 128, 0.2);
+}
+
+.menuBar .p-menubar-root-list {
+  justify-content: center !important;
+  margin-top: 0.4rem;
+}
+```
+</CodeGroup>
+
+### TabView with TabPanels
+
+<CodeGroup>
+```tsx src/Despacho/FormularioDespacho.tsx
+import { TabView, TabPanel } from "primereact/tabview";
+
+export const FormularioDespacho = () => {
+  return (
+    <TabView>
+      <TabPanel className="tabpanel" header="Despacho">
+        {/* Content */}
+      </TabPanel>
+    </TabView>
+  );
+};
+```
+
+```css App.css
+.p-tabview-nav .p-tabview-nav-link {
+  text-decoration: none !important;
+}
+```
+</CodeGroup>
+
+### Dropdown with Float Label
+
+<CodeGroup>
+```tsx src/Despacho/FormularioDespacho.tsx
+import { Dropdown } from "primereact/dropdown";
+import { useState } from "react";
+
+const [selectModulo, setSelectModulo] = useState(null);
+
+<span className="p-float-label">
+  <Dropdown
+    inputId="dd-city"
+    value={selectModulo}
+    onChange={(e) => setSelectModulo(e.value)}
+    options={modulosOptions}
+    className="select"
+  />
+  <label htmlFor="dd-city">Modulo</label>
+</span>
+```
+
+```css App.css
+.select {
+  width: 180px;
+  height: 35px;
+  font-size: 1rem;
+  border-radius: 8px;
+}
+```
+</CodeGroup>
+
+### InputText with Float Label
+
+```tsx src/Despacho/FormularioDespacho.tsx
+import { InputText } from "primereact/inputtext";
+
+<span className="p-float-label">
+  <InputText className="select" />
+  <label htmlFor="username">Economico</label>
+</span>
+```
+
+<Note>
+The `p-float-label` class is a PrimeReact utility that creates animated floating labels when the input is focused or has a value.
+</Note>
+
+### Button with Icons and Severity
+
+<CodeGroup>
+```tsx Success Button
+import { Button } from "primereact/button";
+
+<Button 
+  icon="pi pi-check" 
+  label="Enviar" 
+  severity="success" 
+/>
+```
+
+```tsx Danger Button
+<Button 
+  icon="pi pi-times" 
+  label="Limpiar" 
+  severity="danger" 
+/>
+```
+
+```css App.css
+Button {
+  border-radius: 0.7rem !important;
+}
+```
+</CodeGroup>
+
+### Tooltip Integration
+
+```tsx src/components/Header.tsx
+import { Tooltip } from "primereact/tooltip";
+import { useRef } from "react";
+
+const logoutBtnRef = useRef(null);
+
+<button
+  ref={logoutBtnRef}
+  data-pr-tooltip="Cerrar sesión"
+  title="Cerrar sesión"
+  aria-label="Cerrar sesión"
+>
+  <i className="pi pi-sign-out" style={{ fontSize: "1.2rem", color: "#4caf50" }}></i>
+</button>
+
+<Tooltip 
+  target=".logout-btn" 
+  position="bottom" 
+  mouseTrack 
+  mouseTrackTop={12} 
+/>
+```
+
+## PrimeIcons Usage
+
+PrimeIcons provides a comprehensive icon library used throughout the application:
+
+<Tabs>
+  <Tab title="Navigation Icons">
+    ```tsx
+    <i className="pi pi-fw pi-home"></i>      // Home
+    <i className="pi pi-fw pi-calendar"></i>  // Calendar
+    <i className="pi pi-user"></i>            // User
+    <i className="pi pi-sign-out"></i>        // Logout
+    ```
+  </Tab>
+  
+  <Tab title="Action Icons">
+    ```tsx
+    <i className="pi pi-check"></i>   // Check/Success
+    <i className="pi pi-times"></i>   // Close/Cancel
+    ```
+  </Tab>
+  
+  <Tab title="Icon Sizing">
+    ```tsx
+    // Small
+    <i className="pi pi-user" style={{ fontSize: "1.1rem" }}></i>
+    
+    // Medium
+    <i className="pi pi-sign-out" style={{ fontSize: "1.2rem" }}></i>
+    
+    // With color
+    <i className="pi pi-sign-out" style={{ fontSize: "1.2rem", color: "#4caf50" }}></i>
+    ```
+  </Tab>
+</Tabs>
+
+<Info>
+Explore all available icons at [PrimeIcons Documentation](https://primereact.org/icons/)
+</Info>
+
+## Component Customization
+
+### Overriding PrimeReact Styles
+
+To customize PrimeReact components, target their specific CSS classes:
+
+```css App.css
+/* Target specific PrimeReact component classes */
+.menuBar .p-menuitem-link {
+  margin-right: 1rem;
+  margin-left: -1rem;
+}
+
+.menuBar .p-menubar-root-list {
+  justify-content: center !important;
+  margin-top: 0.4rem;
+}
+
+.p-tabview-nav .p-tabview-nav-link {
+  text-decoration: none !important;
+}
+```
+
+<Warning>
+Use `!important` when overriding PrimeReact's default styles to ensure your custom styles take precedence.
+</Warning>
+
+## Theming Options
+
+### Available PrimeReact Themes
+
+While SUGO Front uses Saga Blue, PrimeReact offers multiple themes:
+
+<Tabs>
+  <Tab title="Current Theme">
+    ```tsx
+    import "primereact/resources/themes/saga-blue/theme.css";
+    ```
+  </Tab>
+  
+  <Tab title="Alternative Themes">
+    ```tsx
+    // Material Design
+    import "primereact/resources/themes/md-light-indigo/theme.css";
+    
+    // Bootstrap Theme
+    import "primereact/resources/themes/bootstrap4-light-blue/theme.css";
+    
+    // Vela Theme
+    import "primereact/resources/themes/vela-blue/theme.css";
+    
+    // Arya Theme (Dark)
+    import "primereact/resources/themes/arya-blue/theme.css";
+    ```
+  </Tab>
+</Tabs>
+
+### Theme Customization with CSS Variables
+
+PrimeReact themes can be customized using CSS variables:
+
+```css
+:root {
+  --primary-color: #f1d262;
+  --primary-color-text: #19160b;
+  --surface-border: #7c6c34;
+}
+```
+
+## Best Practices
+
+<Steps>
+  <Step title="Use semantic severity levels">
+    Leverage Button severity props (`success`, `danger`, `info`, `warning`) for consistent UI feedback.
+  </Step>
+  
+  <Step title="Combine with float labels">
+    Use `p-float-label` wrapper for better UX with InputText and Dropdown components.
+  </Step>
+  
+  <Step title="Leverage PrimeIcons">
+    Use PrimeIcons instead of custom icons for consistency with the PrimeReact theme.
+  </Step>
+  
+  <Step title="Customize via CSS classes">
+    Add custom classes to PrimeReact components and style them in App.css rather than inline styles.
+  </Step>
+</Steps>
+
+## Related Resources
+
+<CardGroup cols={2}>
+  <Card title="Theme Architecture" icon="palette" href="/styling/theme">
+    Learn about the overall styling architecture
+  </Card>
+  
+  <Card title="Bootstrap Integration" icon="bootstrap" href="/styling/bootstrap">
+    See how Bootstrap utilities complement PrimeReact
+  </Card>
+</CardGroup>
